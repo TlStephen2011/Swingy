@@ -4,10 +4,15 @@ import java.util.ArrayList;
 
 public class GameBoard {
 	private int size;
+	ArrayList<ArrayList<typeOccupying> > board;
+	
 	private enum typeOccupying {
 		EMPTY,
 		ENEMY,
 		HERO
 	};
-	ArrayList<ArrayList<typeOccupying> > board = new ArrayList<ArrayList<typeOccupying>>(size);
+
+	public GameBoard() {
+		ArrayList<ArrayList<typeOccupying> > board = new ArrayList<ArrayList<typeOccupying>>(size);
+	}
 }
