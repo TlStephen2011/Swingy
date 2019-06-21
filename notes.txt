@@ -1,0 +1,46 @@
+# game start
+
+create a hero OR
+select previously created hero
+
+# when selecting
+
+player can view all hero stats
+
+# hero stats
+
+Hero name
+Hero class
+Level
+Experience
+Attack
+Defense
+Hit Points
+
+# artifacts
+
+Weapon
+Armor
+Helm
+
+#After selecting hero
+
+# Gameplay
+hero start in center of square grid where size = (level - 1)*5 + 10 - (level % 2);
+hero can move N, S, E, W
+hero wins by reaching any border (exiting the map)
+villains spawn initally in random positions on the map
+if hero moves to a position occupied by a villain, he can choose to fight or run
+run is successful 50% of the time and takes the hero back to where he came from
+if hero dies to villain he loses
+
+#on victory
+hero gains experience and potentially an artifact
+
+#leveling up
+level is calculated based on experience level*1000+((level - 1)**2)*450
+
+#preserve state
+hero state will be saved to text file and loaded
+
+
