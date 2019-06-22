@@ -1,8 +1,9 @@
 package za.co.wethinkcode.swingy;
 
-import utilities.Coordinates;
 import za.co.wethinkcode.models.Hero;
+import za.co.wethinkcode.models.Villain;
 import za.co.wethinkcode.models.Weapon;
+import za.co.wethinkcode.utilities.Coordinates;
 
 public class App 
 {
@@ -23,9 +24,18 @@ public class App
     	
     	Weapon w2 = new Weapon("Long Sword", 30);
     	
-    	me .equip(w2);
+    	me.equip(w2);
     	
     	System.out.println(me.getDamage());
     	
+    	System.out.println(me.getLevel());
+    	
+    	me.getXp(2500);
+    	
+    	System.out.println(me.getLevel());
+    	
+    	Villain v = new Villain("Tywin", 100, 100, 100, 100, coords);
+    	System.out.println("Attack: " + me.attack(v));
+    	System.out.println("Run: " + me.run(v));
     }
 }

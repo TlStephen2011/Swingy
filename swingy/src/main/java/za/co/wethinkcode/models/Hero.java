@@ -1,6 +1,8 @@
 package za.co.wethinkcode.models;
 
-import utilities.Coordinates;
+import java.util.Random;
+
+import za.co.wethinkcode.utilities.Coordinates;
 
 public class Hero extends Character {
 	private String heroClass;
@@ -8,6 +10,7 @@ public class Hero extends Character {
 	private Weapon weapon;
 	private Armor armor;
 	private Helm helm;
+	private Coordinates previousCoordinates;
 	
 	public Hero(	String name,
 					String heroClass,
@@ -57,7 +60,6 @@ public class Hero extends Character {
 	}
 	
 	public void equip(Artifact a) {
-		
 		if (a instanceof Weapon) {			
 			int currentDamageBonus = this.weapon == null ? 0 : this.weapon.getDamage();			
 			this.attackDamage = this.attackDamage - currentDamageBonus + ((Weapon)a).getDamage();
@@ -76,11 +78,43 @@ public class Hero extends Character {
 	public int getXp(int xp) {
 		this.experience += xp;
 		
-		if (this.experience >= (this.level*1000 + Math.pow((this.level - 1), 2)*450)) {
+		while (this.experience >= (this.level*1000 + Math.pow((this.level - 1), 2)*450)) {
 			this.level++;
 		}
 		
 		return this.experience;
+	}
+	
+	public int getDamage() {
+		return this.attackDamage;
+	}
+	
+	public void move(Coordinates co) {
+		this.previousCoordinates = this.position;
+		this.position = co;
+	}
+	
+	public boolean attack(Villain v) {
+		//TODO better attack calculation
+		if (this.attackDamage > v.attackDamage) {
+			return true;
+		}
+		return false;		
+	}
+	
+	public boolean run(Villain v) {
+		//TODO better run algorithm
+		Random rand = new Random(System.currentTimeMillis());
+		
+		if ((rand.nextInt() % 100 + 1) % 2 == 0) {
+			this.position = this.previousCoordinates;
+			return true;
+		}		
+		return false;
+	}
+	
+	public int getLevel() {
+		return this.level;
 	}
 	
 	public String toString() {
@@ -88,9 +122,5 @@ public class Hero extends Character {
 					"Class: " + this.heroClass + "\n" +
 					"Position: (" + this.position.getRow() + ", " + this.position.getCol() + ")" + "\n";
 		return s;
-	}
-	
-	public int getDamage() {
-		return this.attackDamage;
 	}
 }

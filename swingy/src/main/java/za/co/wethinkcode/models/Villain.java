@@ -1,6 +1,6 @@
 package za.co.wethinkcode.models;
 
-import utilities.Coordinates;
+import za.co.wethinkcode.utilities.Coordinates;
 
 public class Villain extends Character {
 	private boolean hasArtifact;

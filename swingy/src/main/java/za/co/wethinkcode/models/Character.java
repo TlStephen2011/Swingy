@@ -1,6 +1,6 @@
 package za.co.wethinkcode.models;
 
-import utilities.Coordinates;
+import za.co.wethinkcode.utilities.Coordinates;
 
 public abstract class Character {
 	protected String name;

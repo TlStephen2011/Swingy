@@ -1,4 +1,4 @@
-package utilities;
+package za.co.wethinkcode.utilities;
 
 public class Coordinates {
 	private int row;
