@@ -1,5 +1,7 @@
 package za.co.wethinkcode.models;
 
+import java.util.Random;
+
 import za.co.wethinkcode.utilities.Coordinates;
 
 public class Villain extends Character {
@@ -32,4 +34,14 @@ public class Villain extends Character {
 		this.hasArtifact = false;
 	}
 	
+	public Artifact dropArtifact() {
+		if (this.hasArtifact) {
+			Random rand = new Random(System.currentTimeMillis());
+			
+			if ((rand.nextInt() % 100 + 1) % 2 == 0) {
+				return this.artifact;
+			}
+		}
+		return null;
+	}
 }

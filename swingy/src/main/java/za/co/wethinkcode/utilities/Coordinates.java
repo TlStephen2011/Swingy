@@ -17,3 +17,4 @@ public class Coordinates {
 		return this.column;
 	}
 }
+ 

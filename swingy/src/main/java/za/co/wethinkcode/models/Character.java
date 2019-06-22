@@ -23,4 +23,8 @@ public abstract class Character {
 		this.hitPoints = hitPoints;
 		this.position = position;
 	}
+	
+	public Coordinates getPosition() {
+		return this.position;
+	}
 }

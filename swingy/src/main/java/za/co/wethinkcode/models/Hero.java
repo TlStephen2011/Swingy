@@ -89,6 +89,10 @@ public class Hero extends Character {
 		return this.attackDamage;
 	}
 	
+	public void takeDamage(int x) {
+		this.hitPoints = this.hitPoints - x < 0 ? 0 : this.hitPoints - x;
+	}
+	
 	public void move(Coordinates co) {
 		this.previousCoordinates = this.position;
 		this.position = co;
