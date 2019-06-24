@@ -38,47 +38,28 @@ public class App
 //    	Villain v = new Villain("Tywin", 100, 100, 100, 100, coords);
 //    	System.out.println("Attack: " + me.attack(v));
 //    	System.out.println("Run: " + me.run(v));
-//
-//    	GameBoard game = new GameBoard(10);
-//    	game.printBoard();
-//    	System.out.println();
-//    	try {
-//			game.place(coords, me);
-//			game.printBoard();
-//			System.out.println();
-//			game.move(coords, new Coordinates(9, 9));
-//			game.printBoard();
-//			System.out.println();
-//			Villain v = new Villain("Tywin", 100, 100, 100, 100, new Coordinates(2, 2));
-//			game.place(new Coordinates(2, 2), v);
-//			game.printBoard();
-//			System.out.println();
-//			game.move(new Coordinates(2, 2), new Coordinates(6, 6));
-//			game.printBoard();
-//			System.out.println();
-//			
-//    	} catch (Exception e) {
-//			// TODO: handle exception
-//			System.out.println("Something went wrong, for now we this message: " + e.getMessage());
-//		}
-    	
-    	GameBoard g = new GameBoard(10);
-    	g.printBoard();
-    	System.out.println();
-    	
-    	try {
-    		g.place(me.getPosition(), me);	
-		} catch (Exception e) {
-			System.out.println("NO EXCEPTION");
-		}
-    	g.printBoard();
+
+    	GameBoard game = new GameBoard(10);
+    	game.printBoard();
     	System.out.println();
     	try {
-			g.move(me.getPosition(), new Coordinates(5, 5));
-			g.printBoard();
+			game.place(coords, me);
+			game.printBoard();
 			System.out.println();
-		} catch (Exception e) {
+			game.move(coords, new Coordinates(9, 9));
+			game.printBoard();
+			System.out.println();
+			Villain v = new Villain("Tywin", 100, 100, 100, 100, new Coordinates(2, 2));
+			game.place(new Coordinates(2, 2), v);
+			game.printBoard();
+			System.out.println();
+			game.move(new Coordinates(2, 2), new Coordinates(6, 6));
+			game.printBoard();
+			System.out.println();
+			
+    	} catch (Exception e) {
 			// TODO: handle exception
+			System.out.println("Something went wrong, for now we this message: " + e.getMessage());
 		}
     }
 }
