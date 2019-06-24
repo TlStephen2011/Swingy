@@ -62,6 +62,23 @@ public class App
 //			System.out.println("Something went wrong, for now we this message: " + e.getMessage());
 //		}
     	
+    	GameBoard g = new GameBoard(10);
+    	g.printBoard();
+    	System.out.println();
     	
+    	try {
+    		g.place(me.getPosition(), me);	
+		} catch (Exception e) {
+			System.out.println("NO EXCEPTION");
+		}
+    	g.printBoard();
+    	System.out.println();
+    	try {
+			g.move(me.getPosition(), new Coordinates(5, 5));
+			g.printBoard();
+			System.out.println();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
     }
 }
