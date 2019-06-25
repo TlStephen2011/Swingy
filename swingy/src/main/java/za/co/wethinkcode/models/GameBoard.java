@@ -6,7 +6,7 @@ import za.co.wethinkcode.utilities.Coordinates;
 
 public class GameBoard {
 	private int size;
-	ArrayList<ArrayList<Character> > board;
+	private ArrayList< ArrayList<Character> > board;
 	
 	public GameBoard(int s) {
 		this.size = s;

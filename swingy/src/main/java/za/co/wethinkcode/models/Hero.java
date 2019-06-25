@@ -12,6 +12,11 @@ public class Hero extends Character {
 	private Helm helm;
 	private Coordinates previousCoordinates;
 	
+	public Hero(String name, String heroClass) {
+		super(name, 0, 20, 10, 100, new Coordinates(0, 0));
+		this.experience = 0;
+	}
+	
 	public Hero(	String name,
 					String heroClass,
 					int level,
