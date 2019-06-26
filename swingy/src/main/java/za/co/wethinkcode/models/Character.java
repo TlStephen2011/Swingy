@@ -27,4 +27,8 @@ public abstract class Character {
 	public Coordinates getPosition() {
 		return this.position;
 	}
+	
+	public void setPosition(Coordinates c) {
+		this.position = c;
+	}
 }

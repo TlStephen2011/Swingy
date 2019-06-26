@@ -5,7 +5,7 @@ import za.co.wethinkcode.models.Hero;
 
 public interface Viewable {
 	
-	enum inputType {
+	public enum inputType {
 		NORTH,
 		SOUTH,
 		EAST,

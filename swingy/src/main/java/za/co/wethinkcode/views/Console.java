@@ -118,29 +118,31 @@ public class Console implements Viewable {
 	}
 
 	public Hero newHero() {
-		try {
-			String[] hero = this.showHeroMenu();
-			if (hero == null) {
-				hero = this.createNewHero();
-				return new Hero(hero[0], hero[1]);
-			} else {
-				return new Hero(
-						hero[0],
-						hero[1],
-						Integer.parseInt(hero[2]),
-						Integer.parseInt(hero[3]),
-						Integer.parseInt(hero[4]),
-						Integer.parseInt(hero[5]),
-						Integer.parseInt(hero[6]),
-						new Coordinates(0, 0),
-						new Weapon(hero[7], 15),
-						new Armor(hero[8], 30),
-						new Helm(hero[9], 100)
-				);
+		
+		while (true) {
+			try {
+				String[] hero = this.showHeroMenu();
+				if (hero == null) {
+					hero = this.createNewHero();
+					return new Hero(hero[0].trim(), hero[1].trim());
+				} else {
+					return new Hero(
+							hero[0].trim(),
+							hero[1].trim(),
+							Integer.parseInt(hero[2].trim()),
+							Integer.parseInt(hero[3].trim()),
+							Integer.parseInt(hero[4].trim()),
+							Integer.parseInt(hero[5].trim()),
+							Integer.parseInt(hero[6].trim()),
+							new Coordinates(0, 0),
+							new Weapon(hero[7].trim(), 15),
+							new Armor(hero[8].trim(), 30),
+							new Helm(hero[9].trim(), 100)
+					);
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
 			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return null;
 		}
 	}
 }
