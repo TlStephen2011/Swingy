@@ -18,7 +18,7 @@ public class Console implements Viewable {
 		
 	}
 
-	public String[] createNewHero() {
+	private String[] createNewHero() {
 		String[] str = new String[2];
 		BufferedReader br = null;
 		
@@ -35,13 +35,14 @@ public class Console implements Viewable {
 		return str;
 	}
 	
-	public String[] getAvailableHeroes() {
+	private String[] getAvailableHeroes() {
 		ArrayList<String> lines = new ArrayList<String>();
 		String line;
 		
 		try {
 			BufferedReader objReader = new BufferedReader(new FileReader("heroes.txt"));
 			
+			//TODO add saved_heroes file validation
 			while ((line = objReader.readLine()) != null) {
 				lines.add(line);
 			}
@@ -54,9 +55,8 @@ public class Console implements Viewable {
 		return str;
 	}
 	
-	public String[] showHeroMenu() throws Exception {
+	private String[] showHeroMenu() throws Exception {
 		//TODO present hero options from file
-		ArrayList<String> heroes = new ArrayList<String>();
 		String[] str = this.getAvailableHeroes();
 		
 		if (str.length == 0) {
@@ -75,6 +75,9 @@ public class Console implements Viewable {
 			if (index == 0) {
 				return null;
 			} else {
+				if (index > str.length) {
+					throw new IndexOutOfBoundsException("The selected hero is not available");
+				}
 				return str[index - 1].split(",");
 			}
 		}
@@ -118,29 +121,31 @@ public class Console implements Viewable {
 	}
 
 	public Hero newHero() {
-		try {
-			String[] hero = this.showHeroMenu();
-			if (hero == null) {
-				hero = this.createNewHero();
-				return new Hero(hero[0], hero[1]);
-			} else {
-				return new Hero(
-						hero[0],
-						hero[1],
-						Integer.parseInt(hero[2]),
-						Integer.parseInt(hero[3]),
-						Integer.parseInt(hero[4]),
-						Integer.parseInt(hero[5]),
-						Integer.parseInt(hero[6]),
-						new Coordinates(0, 0),
-						new Weapon(hero[7], 15),
-						new Armor(hero[8], 30),
-						new Helm(hero[9], 100)
-				);
+		while (true) {
+			try {
+				String[] hero = this.showHeroMenu();
+				if (hero == null) {
+					hero = this.createNewHero();
+					return new Hero(hero[0], hero[1]);
+				} else {
+					return new Hero(
+							hero[0].trim(),
+							hero[1].trim(),
+							Integer.parseInt(hero[2].trim()),
+							Integer.parseInt(hero[3].trim()),
+							Integer.parseInt(hero[4].trim()),
+							Integer.parseInt(hero[5].trim()),
+							Integer.parseInt(hero[6].trim()),
+							new Coordinates(0, 0),
+							new Weapon(hero[7].trim(), 15),
+							new Armor(hero[8].trim(), 30),
+							new Helm(hero[9].trim(), 100)
+					);
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				System.out.println();
 			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return null;
-		}
+		}		
 	}
 }

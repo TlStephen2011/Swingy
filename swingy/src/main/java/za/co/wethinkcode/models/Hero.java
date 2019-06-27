@@ -14,6 +14,7 @@ public class Hero extends Character {
 	
 	public Hero(String name, String heroClass) {
 		super(name, 0, 20, 10, 100, new Coordinates(0, 0));
+		this.heroClass = heroClass;
 		this.experience = 0;
 	}
 	
