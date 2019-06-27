@@ -18,7 +18,7 @@ public class Console implements Viewable {
 		
 	}
 
-	private String[] createNewHero() {
+	public String[] createNewHero() {
 		String[] str = new String[2];
 		BufferedReader br = null;
 		
@@ -35,14 +35,13 @@ public class Console implements Viewable {
 		return str;
 	}
 	
-	private String[] getAvailableHeroes() {
+	public String[] getAvailableHeroes() {
 		ArrayList<String> lines = new ArrayList<String>();
 		String line;
 		
 		try {
 			BufferedReader objReader = new BufferedReader(new FileReader("heroes.txt"));
 			
-			//TODO add saved_heroes file validation
 			while ((line = objReader.readLine()) != null) {
 				lines.add(line);
 			}
@@ -55,8 +54,9 @@ public class Console implements Viewable {
 		return str;
 	}
 	
-	private String[] showHeroMenu() throws Exception {
+	public String[] showHeroMenu() throws Exception {
 		//TODO present hero options from file
+		ArrayList<String> heroes = new ArrayList<String>();
 		String[] str = this.getAvailableHeroes();
 		
 		if (str.length == 0) {
@@ -75,9 +75,6 @@ public class Console implements Viewable {
 			if (index == 0) {
 				return null;
 			} else {
-				if (index > str.length) {
-					throw new IndexOutOfBoundsException("The selected hero is not available");
-				}
 				return str[index - 1].split(",");
 			}
 		}
@@ -121,12 +118,13 @@ public class Console implements Viewable {
 	}
 
 	public Hero newHero() {
+		
 		while (true) {
 			try {
 				String[] hero = this.showHeroMenu();
 				if (hero == null) {
 					hero = this.createNewHero();
-					return new Hero(hero[0], hero[1]);
+					return new Hero(hero[0].trim(), hero[1].trim());
 				} else {
 					return new Hero(
 							hero[0].trim(),
@@ -144,8 +142,7 @@ public class Console implements Viewable {
 				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
-				System.out.println();
 			}
-		}		
+		}
 	}
 }

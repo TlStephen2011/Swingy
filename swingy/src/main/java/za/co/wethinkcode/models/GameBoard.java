@@ -22,6 +22,10 @@ public class GameBoard {
 		}
 	}
 	
+	public int getSize() {
+		return this.size;
+	}
+	
 	public void printBoard() {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {				
@@ -53,11 +57,11 @@ public class GameBoard {
 	
 	public void move(Coordinates oldCoord, Coordinates newCoord) throws Exception {
 		
-		if (oldCoord.getRow() >= this.size || oldCoord.getCol() >= this.size) {
+		if (oldCoord.getRow() >= this.size || oldCoord.getCol() >= this.size || oldCoord.getRow() < 0 || oldCoord.getCol() < 0) {
 			throw new Exception("[From] coordinate is invalid");
 		}
 		
-		if (newCoord.getRow() >= this.size || newCoord.getCol() >= this.size) {
+		if (newCoord.getRow() >= this.size || newCoord.getCol() >= this.size || newCoord.getRow() < 0 || newCoord.getCol() < 0) {
 			throw new IndexOutOfBoundsException("can't move Character outside of grid idiot");
 		}
 		
