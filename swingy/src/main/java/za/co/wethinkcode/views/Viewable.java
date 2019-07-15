@@ -16,7 +16,10 @@ public interface Viewable {
 		UNKNOWN
 	};
 	
-	public inputType getInput();
+	public Viewable.inputType getInput();
 	public void display(GameBoard g, String x);
 	public Hero newHero();
+	public Viewable.inputType showFightMenu(String villain);
+	public Viewable.inputType showWonFight();
+	
 }

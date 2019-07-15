@@ -2,6 +2,8 @@ package za.co.wethinkcode.controllers;
 
 import java.util.ArrayList;
 
+import exceptions.OccupiedByVillainException;
+import za.co.wethinkcode.models.Artifact;
 import za.co.wethinkcode.models.GameBoard;
 import za.co.wethinkcode.models.Hero;
 import za.co.wethinkcode.models.Villain;
@@ -40,14 +42,35 @@ public class GameController {
 		Viewable.inputType t = this.view.getInput();
 		Coordinates pos = this.hero.getPosition();
 		if (t == Viewable.inputType.NORTH) {
-			try {
-				Coordinates newCoords = new Coordinates(pos.getRow() - 1, pos.getCol());
-				this.gameBoard.move(pos, newCoords);
-				this.hero.setPosition(newCoords);
+			Coordinates newCoords = new Coordinates(pos.getRow() - 1, pos.getCol());
+			try {				
+				this.gameBoard.move(pos, newCoords);				
+			} catch (OccupiedByVillainException e) {
+				Villain v = (Villain)this.gameBoard.get(newCoords);
+				t = this.view.showFightMenu(v.toString());
+				if (t == Viewable.inputType.FIGHT) {
+					//TODO fight villain or game over
+					boolean wonFight = this.hero.attack(v);
+					if (wonFight == true) {
+						Artifact a = v.dropArtifact();
+						this.view.showWonFight();
+						if (a != null) {
+				
+						}
+					} else {
+						
+					}
+					
+				} else {
+					//TODO try run, if can't then fight
+				}
+				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				return false;
 			}
+			//moving internal hero coordinates to new position
+			this.hero.setPosition(newCoords);
 			System.out.println();
 			this.gameBoard.printBoard();
 			return true;

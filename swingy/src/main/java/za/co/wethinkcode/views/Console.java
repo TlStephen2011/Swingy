@@ -145,4 +145,16 @@ public class Console implements Viewable {
 			}
 		}
 	}
+	
+	public Viewable.inputType showFightMenu(String villain) {
+		System.out.println("You have encountered a villain: ");
+		System.out.println(villain);
+		System.out.println("Do you want to fight or run? [FIGHT]/[RUN]");
+		Viewable.inputType choice = this.getInput();
+		while (choice != inputType.FIGHT && choice != inputType.RUN) {
+			System.out.println("You have entered an invalid option. You can either [FIGHT] or [RUN].");
+			choice = this.getInput();
+		}
+		return choice;
+	}
 }

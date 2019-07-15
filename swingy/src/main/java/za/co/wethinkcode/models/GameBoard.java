@@ -2,6 +2,7 @@ package za.co.wethinkcode.models;
 
 import java.util.ArrayList;
 
+import exceptions.OccupiedByVillainException;
 import za.co.wethinkcode.utilities.Coordinates;
 
 public class GameBoard {
@@ -43,9 +44,17 @@ public class GameBoard {
 		}
 	}
 	
+	public Character get(Coordinates c) {
+		return this.board.get(c.getRow()).get(c.getCol());
+	}
+	
+	public void set(Coordinates c, Character bePlaced) {
+		this.board.get(c.getRow()).set(c.getCol(), bePlaced);
+	}
+	
 	public void place(Coordinates c, Character character) throws Exception {
 		if (c.getRow() >= this.size || c.getCol() >= this.size) {
-			throw new IndexOutOfBoundsException("can't place Character outside of grid idiot");
+			throw new IndexOutOfBoundsException("Reached end of map");
 		}
 		
 		if (this.board.get(c.getRow()).get(c.getCol()) != null) {
@@ -69,8 +78,12 @@ public class GameBoard {
 			throw new Exception("Nothing to moved");
 		}
 		
-		Character temp = this.board.get(oldCoord.getRow()).get(oldCoord.getCol());
-		this.board.get(oldCoord.getRow()).set(oldCoord.getCol(), null);
-		this.board.get(newCoord.getRow()).set(newCoord.getCol(), temp);
+		if (this.get(newCoord) instanceof Villain) {
+			throw new OccupiedByVillainException(this.get(newCoord).toString());
+		}
+		
+		Character temp = this.get(oldCoord);
+		this.set(oldCoord, null);
+		this.set(newCoord, temp);
 	}
 }
