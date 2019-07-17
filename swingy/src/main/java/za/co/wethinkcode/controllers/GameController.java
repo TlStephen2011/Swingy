@@ -2,7 +2,6 @@ package za.co.wethinkcode.controllers;
 
 import java.util.ArrayList;
 
-import exceptions.OccupiedByVillainException;
 import za.co.wethinkcode.models.Artifact;
 import za.co.wethinkcode.models.GameBoard;
 import za.co.wethinkcode.models.Hero;
@@ -11,6 +10,7 @@ import za.co.wethinkcode.utilities.Coordinates;
 import za.co.wethinkcode.utilities.VillainBuilder;
 import za.co.wethinkcode.views.Console;
 import za.co.wethinkcode.views.Viewable;
+import za.co.wethinkcode.exceptions.OccupiedByVillainException;
 
 public class GameController {
 	
@@ -78,4 +78,8 @@ public class GameController {
 		return true;
 	}
 	
+	private Viewable.inputType handleMovement(Viewable.inputType input)
+		Coordinates c;
+	}
+
 }
