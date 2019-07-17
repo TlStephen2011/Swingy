@@ -1,1 +1,1 @@
-Tyrone, Human, 5, 1000, 100, 50, 100, Long Sword, Wooden armor, Steel helm
+Tyrone, Human, 1, 1000, 100, 50, 100, Long Sword, Wooden armor, Steel helm

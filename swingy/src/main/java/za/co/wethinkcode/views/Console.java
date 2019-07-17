@@ -157,4 +157,8 @@ public class Console implements Viewable {
 		}
 		return choice;
 	}
+
+	public void showWonFight() {
+		System.out.println("You were victorious!");
+	}
 }

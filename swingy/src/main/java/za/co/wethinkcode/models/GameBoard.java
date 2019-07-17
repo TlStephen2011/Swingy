@@ -2,7 +2,7 @@ package za.co.wethinkcode.models;
 
 import java.util.ArrayList;
 
-import exceptions.OccupiedByVillainException;
+import za.co.wethinkcode.exceptions.OccupiedByVillainException;
 import za.co.wethinkcode.utilities.Coordinates;
 
 public class GameBoard {

@@ -20,6 +20,6 @@ public interface Viewable {
 	public void display(GameBoard g, String x);
 	public Hero newHero();
 	public Viewable.inputType showFightMenu(String villain);
-	public Viewable.inputType showWonFight();
+	public void showWonFight();
 	
 }
