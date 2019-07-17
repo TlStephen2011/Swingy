@@ -2,6 +2,7 @@ package za.co.wethinkcode.controllers;
 
 import java.util.ArrayList;
 
+import za.co.wethinkcode.exceptions.*;
 import za.co.wethinkcode.models.Artifact;
 import za.co.wethinkcode.models.GameBoard;
 import za.co.wethinkcode.models.Hero;
@@ -10,7 +11,7 @@ import za.co.wethinkcode.utilities.Coordinates;
 import za.co.wethinkcode.utilities.VillainBuilder;
 import za.co.wethinkcode.views.Console;
 import za.co.wethinkcode.views.Viewable;
-import za.co.wethinkcode.exceptions.OccupiedByVillainException;
+import za.co.wethinkcode.views.Viewable.inputType;
 
 public class GameController {
 	
@@ -39,47 +40,71 @@ public class GameController {
 	}
 	
 	public boolean run() {
-		Viewable.inputType t = this.view.getInput();
-		Coordinates pos = this.hero.getPosition();
-		if (t == Viewable.inputType.NORTH) {
-			Coordinates newCoords = new Coordinates(pos.getRow() - 1, pos.getCol());
-			try {				
-				this.gameBoard.move(pos, newCoords);				
-			} catch (OccupiedByVillainException e) {
-				Villain v = (Villain)this.gameBoard.get(newCoords);
-				t = this.view.showFightMenu(v.toString());
-				if (t == Viewable.inputType.FIGHT) {
-					//TODO fight villain or game over
-					boolean wonFight = this.hero.attack(v);
-					if (wonFight == true) {
-						Artifact a = v.dropArtifact();
-						this.view.showWonFight();
-						if (a != null) {
-				
-						}
-					} else {
-						
-					}
-					
-				} else {
-					//TODO try run, if can't then fight
+		boolean activeGame = true;
+
+		while (activeGame) {
+			inputType in = this.view.getMovementDirection();
+
+			try {
+				handleMovement(in);
+			} catch (RequiredToFightException e) {
+				Villain v = e.getVillain();
+				inputType t = this.view.showEnemyEncounter(v);
+				Artifact a = handleEncounter(t, v);
+
+				if (a != null) {
+					t = this.view.showArtifactDropped(a);
+					handleNewArtifact(t, a);
 				}
-				
-			} catch (Exception e) {
+			} catch (IndexOutOfBoundsException e) {
+				//TODO generate new board
 				System.out.println(e.getMessage());
 				return false;
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				System.exit(1);
 			}
-			//moving internal hero coordinates to new position
-			this.hero.setPosition(newCoords);
-			System.out.println();
 			this.gameBoard.printBoard();
-			return true;
 		}
-		return true;
+
+
+
+		return activeGame;
+	}	
+
+	private void handleNewArtifact(inputType t, Artifact a) {
 	}
-	
-	private Viewable.inputType handleMovement(Viewable.inputType input)
-		Coordinates c;
+
+	private Artifact handleEncounter(inputType t, Villain v) {
+		return null;
+	}
+
+	private void handleMovement(Viewable.inputType input) throws RequiredToFightException, IndexOutOfBoundsException {
+		Coordinates co = this.hero.getPosition();
+		Coordinates newCoordinates = null;
+
+		try {
+			if (input == inputType.NORTH) {
+				newCoordinates = new Coordinates(co.getRow() - 1, co.getCol());
+			} else if (input == inputType.SOUTH) {
+				newCoordinates = new Coordinates(co.getRow() + 1, co.getCol());
+			} else if (input == inputType.EAST) {
+				newCoordinates = new Coordinates(co.getRow(), co.getCol() + 1);
+			} else if (input == inputType.WEST) {
+				newCoordinates = new Coordinates(co.getRow(), co.getCol() - 1);
+			}
+
+			this.gameBoard.move(co, newCoordinates);
+		} catch (OccupiedByVillainException e) {
+			throw new RequiredToFightException(e.getVillain());
+		} catch (IndexOutOfBoundsException e) {
+			throw new IndexOutOfBoundsException(e.getMessage());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
+
+		this.hero.move(newCoordinates);
 	}
 
 }

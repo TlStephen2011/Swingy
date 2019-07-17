@@ -79,7 +79,7 @@ public class GameBoard {
 		}
 		
 		if (this.get(newCoord) instanceof Villain) {
-			throw new OccupiedByVillainException(this.get(newCoord).toString());
+			throw new OccupiedByVillainException((Villain)this.get(newCoord));
 		}
 		
 		Character temp = this.get(oldCoord);

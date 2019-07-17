@@ -2,50 +2,53 @@ package za.co.wethinkcode.views;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import za.co.wethinkcode.models.Armor;
+import za.co.wethinkcode.models.Artifact;
 import za.co.wethinkcode.models.GameBoard;
 import za.co.wethinkcode.models.Helm;
 import za.co.wethinkcode.models.Hero;
+import za.co.wethinkcode.models.Villain;
 import za.co.wethinkcode.models.Weapon;
 import za.co.wethinkcode.utilities.Coordinates;
 
 public class Console implements Viewable {
-	
+
 	public Console() {
-		
+
 	}
 
 	public String[] createNewHero() {
 		String[] str = new String[2];
 		BufferedReader br = null;
-		
+
 		try {
 			br = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println("Enter hero name: ");
 			str[0] = br.readLine();
 			System.out.println("Enter hero class: ");
-			str[1] = br.readLine();			
+			str[1] = br.readLine();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return str;
 	}
-	
+
 	public String[] getAvailableHeroes() {
 		ArrayList<String> lines = new ArrayList<String>();
 		String line;
-		
+
 		try {
 			BufferedReader objReader = new BufferedReader(new FileReader("heroes.txt"));
-			
+
 			while ((line = objReader.readLine()) != null) {
 				lines.add(line);
 			}
-			
+
 			objReader.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -53,23 +56,24 @@ public class Console implements Viewable {
 		String[] str = lines.toArray(new String[0]);
 		return str;
 	}
-	
+
 	public String[] showHeroMenu() throws Exception {
-		//TODO present hero options from file
+		// TODO present hero options from file
 		ArrayList<String> heroes = new ArrayList<String>();
 		String[] str = this.getAvailableHeroes();
-		
+
 		if (str.length == 0) {
 			return null;
 		} else {
 			System.out.println("These are your available heroes:");
-			
-			//TODO print hero details correctly
+
+			// TODO print hero details correctly
 			for (int i = 0; i < str.length; i++) {
 				String[] split = str[i].split(",");
 				System.out.println(i + 1 + ": " + split[0].trim());
 			}
-			System.out.println("Select an existing index to start the game with the selected hero or select 0 to create a new hero.");
+			System.out.println(
+					"Select an existing index to start the game with the selected hero or select 0 to create a new hero.");
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			int index = Integer.parseInt(in.readLine());
 			if (index == 0) {
@@ -79,38 +83,48 @@ public class Console implements Viewable {
 			}
 		}
 	}
-	
-	public inputType getInput() {
-		BufferedReader br = null;
 
-        try {
-            br = new BufferedReader(new InputStreamReader(System.in));
-            
-            String input = br.readLine();
-            input = input.toUpperCase();
-            
-            if (input.equals("N")) {
-            	return inputType.NORTH;
-            } else if (input.equals("S")) {
-            	return inputType.SOUTH;
-            } else if (input.equals("W")) {
-            	return inputType.WEST;
-            } else if (input.equals("E")) {
-            	return inputType.EAST;
-            } else if (input.equals("FIGHT")) {
-            	return inputType.FIGHT;
-            } else if (input.equals("RUN")) {
-            	return inputType.RUN;
-            } else if (input.equals("TAKE")) {
-            	return inputType.TAKE_ITEM;
-            } else {
-            	return inputType.UNKNOWN;
-            }
-            
-        } catch (Exception e) {
-        	System.out.println(e.getMessage());
-        }
-		return inputType.UNKNOWN;
+	private inputType getInput() {
+		BufferedReader br = null;
+		Viewable.inputType in = inputType.UNKNOWN;
+
+		try {
+			br = new BufferedReader(new InputStreamReader(System.in));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
+
+		while (in == inputType.UNKNOWN) {
+			try {
+				String input = br.readLine();
+				input = input.toUpperCase();
+
+				if (input.equals("N")) {
+					in = inputType.NORTH;
+				} else if (input.equals("S")) {
+					in = inputType.SOUTH;
+				} else if (input.equals("W")) {
+					in = inputType.WEST;
+				} else if (input.equals("E")) {
+					in = inputType.EAST;
+				} else if (input.equals("FIGHT")) {
+					in = inputType.FIGHT;
+				} else if (input.equals("RUN")) {
+					in = inputType.RUN;
+				} else if (input.equals("TAKE")) {
+					in = inputType.TAKE_ITEM;
+				} else if (input.equals("LEAVE")) {
+					in = inputType.LEAVE_ITEM;
+				} else {
+					in = inputType.UNKNOWN;
+				}
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+
+		return in;
 	}
 
 	public void display(GameBoard g, String x) {
@@ -118,7 +132,7 @@ public class Console implements Viewable {
 	}
 
 	public Hero newHero() {
-		
+
 		while (true) {
 			try {
 				String[] hero = this.showHeroMenu();
@@ -126,29 +140,21 @@ public class Console implements Viewable {
 					hero = this.createNewHero();
 					return new Hero(hero[0].trim(), hero[1].trim());
 				} else {
-					return new Hero(
-							hero[0].trim(),
-							hero[1].trim(),
-							Integer.parseInt(hero[2].trim()),
-							Integer.parseInt(hero[3].trim()),
-							Integer.parseInt(hero[4].trim()),
-							Integer.parseInt(hero[5].trim()),
-							Integer.parseInt(hero[6].trim()),
-							new Coordinates(0, 0),
-							new Weapon(hero[7].trim(), 15),
-							new Armor(hero[8].trim(), 30),
-							new Helm(hero[9].trim(), 100)
-					);
+					return new Hero(hero[0].trim(), hero[1].trim(), Integer.parseInt(hero[2].trim()),
+							Integer.parseInt(hero[3].trim()), Integer.parseInt(hero[4].trim()),
+							Integer.parseInt(hero[5].trim()), Integer.parseInt(hero[6].trim()), new Coordinates(0, 0),
+							new Weapon(hero[7].trim(), 15), new Armor(hero[8].trim(), 30),
+							new Helm(hero[9].trim(), 100));
 				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}
 	}
-	
-	public Viewable.inputType showFightMenu(String villain) {
+
+	public inputType showEnemyEncounter(Villain villain) {
 		System.out.println("You have encountered a villain: ");
-		System.out.println(villain);
+		System.out.println(villain.toString());
 		System.out.println("Do you want to fight or run? [FIGHT]/[RUN]");
 		Viewable.inputType choice = this.getInput();
 		while (choice != inputType.FIGHT && choice != inputType.RUN) {
@@ -158,7 +164,52 @@ public class Console implements Viewable {
 		return choice;
 	}
 
-	public void showWonFight() {
-		System.out.println("You were victorious!");
+	public inputType getMovementDirection() {
+		Viewable.inputType in = this.getInput();
+
+		while (in != Viewable.inputType.NORTH &&
+			   in != Viewable.inputType.SOUTH &&
+			   in != Viewable.inputType.WEST &&
+			   in != Viewable.inputType.EAST) {
+			System.out.println("You have entered an invalid direction");
+			System.out.println("Accepted commands [N, S, E, W]");
+			in = this.getInput();
+		}
+		return in;
+	}
+
+	public void showRun(boolean success) {
+		if (success == true) {
+			System.out.println("You have managed to escape this time. Next time you might not be so lucky!");
+		} else {
+			System.out.println("You were too slow, you are doomed to fight to survive.");
+		}
+	}
+
+	public void showDeath(Villain v, Hero h) {
+		System.out.println(v.toString());
+		System.out.println("Has defeated you.");
+		System.out.println("You died a hero, your stats were:");
+		System.out.println(h.toString());
+	}
+
+	public void showWonFight(Villain v, Hero h) {
+		System.out.println("You managed to defeat the beast.");
+	}
+
+	public inputType showArtifactDropped(Artifact a) {
+		System.out.println("You are presented with an artifact.");
+		System.out.println(a.toString());
+		System.out.println("You can either [TAKE] or [LEAVE] the item.");
+		inputType t = this.getInput();
+		if (t != inputType.TAKE_ITEM && t != inputType.LEAVE_ITEM) {
+			System.out.println("Invalid input. You can either [TAKE] or [LEAVE] the item.");
+			t = this.getInput();
+		}
+		return t;
+	}
+
+	public void showWonCurrentMap() {
+		System.out.println("You have entered the void, you are suddenly placed on a new map.");
 	}
 }
