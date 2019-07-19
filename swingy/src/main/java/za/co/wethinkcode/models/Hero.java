@@ -10,7 +10,6 @@ public class Hero extends Character {
 	private Weapon weapon;
 	private Armor armor;
 	private Helm helm;
-	private Coordinates previousCoordinates;
 	
 	public Hero(String name, String heroClass) {
 		super(name, 0, 20, 10, 100, new Coordinates(0, 0));
@@ -100,7 +99,6 @@ public class Hero extends Character {
 	}
 	
 	public void move(Coordinates co) {
-		this.previousCoordinates = this.position;
 		this.position = co;
 	}
 	
@@ -117,7 +115,6 @@ public class Hero extends Character {
 		Random rand = new Random(System.currentTimeMillis());
 		
 		if ((rand.nextInt() % 100 + 1) % 2 == 0) {
-			this.position = this.previousCoordinates;
 			return true;
 		}		
 		return false;

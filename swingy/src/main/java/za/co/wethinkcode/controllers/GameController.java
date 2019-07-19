@@ -23,19 +23,7 @@ public class GameController {
 	public GameController() {
 		this.view = new Console();
 		this.hero = this.view.newHero();
-		int heroLevel = this.hero.getLevel();
-		this.gameBoard = new GameBoard((heroLevel - 1) * 5 + 10 - (heroLevel % 2));
-		this.villains = VillainBuilder.buildVillains(this.hero.getLevel(), this.gameBoard.getSize());
-		this.hero.setPosition(new Coordinates(this.gameBoard.getSize() / 2, this.gameBoard.getSize() / 2));
-		
-		try {
-			this.gameBoard.place(this.hero.getPosition(), this.hero);
-			for (int i = 0; i < this.villains.size(); i++) {
-				this.gameBoard.place(this.villains.get(i).getPosition(), this.villains.get(i));
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		this.makeNewBoard();
 		this.gameBoard.printBoard();
 	}
 	
@@ -50,36 +38,68 @@ public class GameController {
 			} catch (RequiredToFightException e) {
 				Villain v = e.getVillain();
 				inputType t = this.view.showEnemyEncounter(v);
-				Artifact a = handleEncounter(t, v);
+				Artifact a = null;
+
+				try {
+					a = handleEncounter(t, v, in);
+				} catch (GameOverException gameOver) {
+					this.view.showDeath(v, this.hero);
+					activeGame = false;
+				}
 
 				if (a != null) {
 					t = this.view.showArtifactDropped(a);
 					handleNewArtifact(t, a);
 				}
 			} catch (IndexOutOfBoundsException e) {
-				//TODO generate new board
-				System.out.println(e.getMessage());
-				return false;
+				this.view.showWonCurrentMap();
+				this.makeNewBoard();				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				System.exit(1);
 			}
 			this.gameBoard.printBoard();
 		}
-
-
-
 		return activeGame;
 	}	
 
 	private void handleNewArtifact(inputType t, Artifact a) {
 	}
 
-	private Artifact handleEncounter(inputType t, Villain v) {
+	private Artifact handleEncounter(inputType t, Villain v, inputType in) throws GameOverException {
+		
+		if (t == inputType.FIGHT) {
+			if (this.hero.attack(v) == true) {
+				this.view.showWonFight(v, this.hero);
+				Artifact a = v.dropArtifact();
+				
+				this.gameBoard.dropPosition(v.getPosition());
+				try {
+					this.handleMovement(in);
+				} catch (Exception e) {
+					System.out.println("Villain still in place: " + e.getMessage());
+					System.exit(1);
+				}
+	
+				//TODO: handle level up
+	
+				return a;
+			} else {
+				throw new GameOverException();
+			}
+		} else {
+			boolean ranAway = this.hero.run(v);
+			this.view.showRun(ranAway);
+			
+			if (!ranAway) {
+				return this.handleEncounter(inputType.FIGHT, v, in);
+			}
+		}
+		
 		return null;
 	}
 
-	private void handleMovement(Viewable.inputType input) throws RequiredToFightException, IndexOutOfBoundsException {
+	private void handleMovement(inputType input) throws RequiredToFightException, IndexOutOfBoundsException {
 		Coordinates co = this.hero.getPosition();
 		Coordinates newCoordinates = null;
 
@@ -105,6 +125,23 @@ public class GameController {
 		}
 
 		this.hero.move(newCoordinates);
+	}
+	
+	private void makeNewBoard() {
+		int heroLevel = this.hero.getLevel();
+		this.gameBoard = new GameBoard((heroLevel - 1) * 5 + 10 - (heroLevel % 2));
+		this.villains = VillainBuilder.buildVillains(this.hero.getLevel(), this.gameBoard.getSize());
+		this.hero.setPosition(new Coordinates(this.gameBoard.getSize() / 2, this.gameBoard.getSize() / 2));
+		
+		try {
+			this.gameBoard.place(this.hero.getPosition(), this.hero);
+			for (int i = 0; i < this.villains.size(); i++) {
+				this.gameBoard.place(this.villains.get(i).getPosition(), this.villains.get(i));
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
 	}
 
 }

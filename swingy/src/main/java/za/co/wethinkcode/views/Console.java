@@ -117,6 +117,7 @@ public class Console implements Viewable {
 				} else if (input.equals("LEAVE")) {
 					in = inputType.LEAVE_ITEM;
 				} else {
+					System.out.println("Invalid input");
 					in = inputType.UNKNOWN;
 				}
 			} catch (IOException e) {

@@ -86,4 +86,8 @@ public class GameBoard {
 		this.set(oldCoord, null);
 		this.set(newCoord, temp);
 	}
+
+	public void dropPosition(Coordinates co) {
+		this.board.get(co.getRow()).set(co.getCol(), null);
+	}
 }
