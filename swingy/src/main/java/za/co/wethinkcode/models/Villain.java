@@ -44,4 +44,8 @@ public class Villain extends Character {
 		}
 		return null;
 	}
+	
+	public int getLevel() {
+		return this.level;
+	}
 }

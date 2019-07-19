@@ -80,9 +80,12 @@ public class GameController {
 					System.out.println("Villain still in place: " + e.getMessage());
 					System.exit(1);
 				}
-	
-				//TODO: handle level up
-	
+				
+				int level = this.hero.getLevel();				
+				this.hero.getXp(v.getLevel() * 100);
+				if (this.hero.getLevel() != level) {
+					this.view.showLevelUp(this.hero);
+				}
 				return a;
 			} else {
 				throw new GameOverException();

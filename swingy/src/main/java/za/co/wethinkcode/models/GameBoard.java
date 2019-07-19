@@ -31,13 +31,13 @@ public class GameBoard {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {				
 				if (this.board.get(i).get(j) == null) {
-					System.out.print(".\t");
+					System.out.print(". ");
 				} else if (this.board.get(i).get(j) instanceof Hero) {
-					System.out.print("H\t");
+					System.out.print("H ");
 				} else if (this.board.get(i).get(j) instanceof Villain) {
-					System.out.print("V\t");
+					System.out.print("V ");
 				} else {
-					System.out.print("N\t");
+					System.out.print("N ");
 				}
 			}
 			System.out.println();

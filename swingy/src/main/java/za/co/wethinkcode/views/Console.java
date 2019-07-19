@@ -213,4 +213,8 @@ public class Console implements Viewable {
 	public void showWonCurrentMap() {
 		System.out.println("You have entered the void, you are suddenly placed on a new map.");
 	}
+
+	public void showLevelUp(Hero h) {
+		System.out.println("You have leveled up!. Current level is " + h.getLevel());
+	}
 }

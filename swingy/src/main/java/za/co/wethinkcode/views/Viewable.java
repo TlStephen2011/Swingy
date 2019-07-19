@@ -28,4 +28,5 @@ public interface Viewable {
 	public void showWonFight(Villain v, Hero h);
 	public inputType showArtifactDropped(Artifact a);
 	public void showWonCurrentMap();
+	public void showLevelUp(Hero h);
 }
