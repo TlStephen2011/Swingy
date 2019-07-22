@@ -11,4 +11,8 @@ public class Helm extends Artifact {
 	public int getHP() {
 		return this.hitPoints;
 	}
+	
+	public String toString() {
+		return "Helm\nName: " + this.name + "\nGrants: " + this.hitPoints + "HP";
+	}
 }

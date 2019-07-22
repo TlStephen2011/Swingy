@@ -48,4 +48,21 @@ public class Villain extends Character {
 	public int getLevel() {
 		return this.level;
 	}
+	
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		str.append("\nName: ");
+		str.append(this.name);
+		str.append("\nLevel: ");
+		str.append(this.level);
+		if (this.hasArtifact) {
+			str.append("\nThe villain has an artifact.");
+			str.append("\n");
+			str.append(this.artifact.toString());
+		} else {
+			str.append("\nThe villain does not have any artifact.");
+		}
+		
+		return str.toString();
+	}
 }

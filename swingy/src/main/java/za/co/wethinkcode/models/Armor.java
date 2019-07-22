@@ -11,4 +11,8 @@ public class Armor extends Artifact {
 	public int getDefense() {
 		return this.defense;
 	}
+	
+	public String toString() {
+		return "Armor\nName: " + this.name + "\nGrants: " + this.defense + " Defense";
+	}
 }

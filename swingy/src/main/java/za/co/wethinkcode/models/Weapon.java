@@ -11,4 +11,8 @@ public class Weapon extends Artifact {
 	public int getDamage() {
 		return this.damage;
 	}
+	
+	public String toString() {
+		return "Weapon\nName: " + this.name + "\nGrants: " + this.damage + " Damage";
+	}
 }

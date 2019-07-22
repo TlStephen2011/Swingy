@@ -3,6 +3,7 @@ package za.co.wethinkcode.utilities;
 import java.util.ArrayList;
 import java.util.Random;
 
+import za.co.wethinkcode.models.Artifact;
 import za.co.wethinkcode.models.Villain;
 
 public class VillainBuilder {
@@ -11,6 +12,7 @@ public class VillainBuilder {
 		ArrayList<Villain> villains = new ArrayList<Villain>();
 		String[] names = new String[]{"Leslie", "Thomas", "Peter","John", "Jake", "Phillip", "Rick", "Arnold", "Harry"};
 		Random rand = new Random(System.currentTimeMillis());
+		ArrayList<Artifact> artifacts = ArtifactBuilder.buildArtifacts(level, num / 2);
 		
 		for (int i = 0; i < num / 2; i++) {
 			villains.add(new Villain(names[rand.nextInt(9)],
@@ -18,7 +20,8 @@ public class VillainBuilder {
 									(rand.nextInt(level + 1) + 1) * level,
 									(rand.nextInt(level + 1) + 1) * level,
 									(rand.nextInt(level + 1) + 1) * level,
-									null));
+									null,
+									artifacts.get(i)));
 			
 			Coordinates coords;
 			Villain currentVillain = villains.get(i);
