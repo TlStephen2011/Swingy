@@ -47,13 +47,13 @@ public class ArtifactBuilder {
 			
 			if (types[type].equals("weapon")) {
 				namePos = Math.abs(rand.nextInt() % weapons.length);				
-				a.add(new Weapon(weapons[namePos], (int)Math.pow(level, 2) + level * 5));				
+				a.add(new Weapon(weapons[namePos], (int)Math.pow(level, 2) + level * 5 + 10));				
 			} else if (types[type].equals("helm")) {
 				namePos = Math.abs(rand.nextInt() % helms.length);
-				a.add(new Helm(helms[namePos], (int)Math.pow(level, 2) + level * 10));
+				a.add(new Helm(helms[namePos], (int)Math.pow(level, 2) + level * 10 + 20));
 			} else if (types[type].equals("armor")) {
 				namePos = Math.abs(rand.nextInt() % armor.length);
-				a.add(new Armor(armor[namePos], (int)Math.pow(level, 2) + level * 7));
+				a.add(new Armor(armor[namePos], (int)Math.pow(level, 2) + level * 7 + 10));
 			}		
 		}
 		

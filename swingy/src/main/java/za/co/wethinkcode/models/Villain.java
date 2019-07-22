@@ -55,6 +55,8 @@ public class Villain extends Character {
 		str.append(this.name);
 		str.append("\nLevel: ");
 		str.append(this.level);
+		str.append("\nDamage: ");
+		str.append(this.attackDamage);
 		if (this.hasArtifact) {
 			str.append("\nThe villain has an artifact.");
 			str.append("\n");

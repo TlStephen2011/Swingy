@@ -16,6 +16,7 @@ public interface Viewable {
 		RUN,
 		TAKE_ITEM,
 		LEAVE_ITEM,
+		QUIT,
 		UNKNOWN
 	};
 	
@@ -29,4 +30,6 @@ public interface Viewable {
 	public inputType showArtifactDropped(Artifact a);
 	public void showWonCurrentMap();
 	public void showLevelUp(Hero h);
+	public void showHeroStats(Hero h);
+	public void showGameQuit();
 }

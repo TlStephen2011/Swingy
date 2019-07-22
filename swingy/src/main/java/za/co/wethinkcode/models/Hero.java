@@ -124,10 +124,51 @@ public class Hero extends Character {
 		return this.level;
 	}
 	
+	public void setWeapon(Weapon a) {
+		if (this.weapon != null) {
+			this.attackDamage -= this.weapon.getDamage();
+		}
+		this.weapon = a;
+		this.attackDamage += this.weapon.getDamage();
+	}
+	
+	public void setHelm(Helm a) {
+		if (this.helm != null) {
+			this.hitPoints -= this.helm.getHP();
+		}
+		this.helm = a;
+		this.hitPoints += this.helm.getHP();
+	}
+	
+	public void setArmor(Armor a) {
+		if (this.armor != null) {
+			this.defensePoints -= this.armor.getDefense();
+		}
+		this.armor = a;
+		this.defensePoints += this.armor.getDefense();
+	}
+	
 	public String toString() {
 		String s =  "Hero: " + this.name + "\n" +
 					"Class: " + this.heroClass + "\n" +
-					"Position: (" + this.position.getRow() + ", " + this.position.getCol() + ")" + "\n";
+					"Level: " + this.level + "\n" +
+					"Position: (" + this.position.getRow() + ", " + this.position.getCol() + ")" + "\n" +
+					"Attack: " + this.attackDamage + "\n" +
+					"Defense: " + this.defensePoints + "\n" +
+					"HP: " + this.hitPoints;
+		
+		if (armor != null) {
+			s += "\n" + this.armor.toString();
+		}
+		
+		if (helm != null) {
+			s += "\n" + this.helm.toString();
+		}
+		
+		if (weapon != null) {
+			s += "\n" + this.weapon.toString();
+		}
+		
 		return s;
 	}
 }

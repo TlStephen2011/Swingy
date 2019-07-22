@@ -116,6 +116,8 @@ public class Console implements Viewable {
 					in = inputType.TAKE_ITEM;
 				} else if (input.equals("LEAVE")) {
 					in = inputType.LEAVE_ITEM;
+				} else if (input.equals("QUIT")) {
+					in = inputType.QUIT;
 				} else {
 					System.out.println("Invalid input");
 					in = inputType.UNKNOWN;
@@ -171,7 +173,8 @@ public class Console implements Viewable {
 		while (in != Viewable.inputType.NORTH &&
 			   in != Viewable.inputType.SOUTH &&
 			   in != Viewable.inputType.WEST &&
-			   in != Viewable.inputType.EAST) {
+			   in != Viewable.inputType.EAST &&
+			   in != inputType.QUIT) {
 			System.out.println("You have entered an invalid direction");
 			System.out.println("Accepted commands [N, S, E, W]");
 			in = this.getInput();
@@ -216,5 +219,14 @@ public class Console implements Viewable {
 
 	public void showLevelUp(Hero h) {
 		System.out.println("You have leveled up!. Current level is " + h.getLevel());
+	}
+	
+	public void showHeroStats(Hero h) {
+		System.out.println("Hero Stats");
+		System.out.println(h.toString());
+	}
+	
+	public void showGameQuit() {
+		System.out.println("Your game has been saved. Goodbye.");
 	}
 }

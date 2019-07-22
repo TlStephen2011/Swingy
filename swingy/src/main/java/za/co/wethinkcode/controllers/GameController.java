@@ -3,10 +3,13 @@ package za.co.wethinkcode.controllers;
 import java.util.ArrayList;
 
 import za.co.wethinkcode.exceptions.*;
+import za.co.wethinkcode.models.Armor;
 import za.co.wethinkcode.models.Artifact;
 import za.co.wethinkcode.models.GameBoard;
+import za.co.wethinkcode.models.Helm;
 import za.co.wethinkcode.models.Hero;
 import za.co.wethinkcode.models.Villain;
+import za.co.wethinkcode.models.Weapon;
 import za.co.wethinkcode.utilities.Coordinates;
 import za.co.wethinkcode.utilities.VillainBuilder;
 import za.co.wethinkcode.views.Console;
@@ -58,12 +61,24 @@ public class GameController {
 				System.out.println(e.getMessage());
 				System.exit(1);
 			}
-			this.gameBoard.printBoard();
+			
+			if (activeGame)
+				this.gameBoard.printBoard();
 		}
 		return activeGame;
 	}	
 
 	private void handleNewArtifact(inputType t, Artifact a) {
+		if (t == inputType.TAKE_ITEM) {			
+			if (a instanceof Weapon) {
+				this.hero.setWeapon((Weapon)a);
+			} else if (a instanceof Armor) {
+				this.hero.setArmor((Armor)a);
+			} else if (a instanceof Helm) {
+				this.hero.setHelm((Helm)a);
+			}
+			this.view.showHeroStats(this.hero);
+		}
 	}
 
 	private Artifact handleEncounter(inputType t, Villain v, inputType in) throws GameOverException {
@@ -82,7 +97,7 @@ public class GameController {
 				}
 				
 				int level = this.hero.getLevel();				
-				this.hero.getXp(v.getLevel() * 100);
+				this.hero.getXp(v.getLevel() * 100 + 100);
 				if (this.hero.getLevel() != level) {
 					this.view.showLevelUp(this.hero);
 				}
@@ -106,6 +121,12 @@ public class GameController {
 		Coordinates co = this.hero.getPosition();
 		Coordinates newCoordinates = null;
 
+		if (input == inputType.QUIT) {
+			//TODO: save state to FILE and exit gracefully
+			this.view.showGameQuit();
+			System.exit(0);
+		}
+		
 		try {
 			if (input == inputType.NORTH) {
 				newCoordinates = new Coordinates(co.getRow() - 1, co.getCol());

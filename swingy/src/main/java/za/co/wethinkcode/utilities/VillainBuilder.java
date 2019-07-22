@@ -10,16 +10,16 @@ public class VillainBuilder {
 
 	public static ArrayList<Villain> buildVillains(int level, int num) {
 		ArrayList<Villain> villains = new ArrayList<Villain>();
-		String[] names = new String[]{"Leslie", "Thomas", "Peter","John", "Jake", "Phillip", "Rick", "Arnold", "Harry"};
+		String[] names = new String[]{"Leslie", "Thomas", "Peter","Johnson", "Jake", "Phillip", "Rick", "Arnold", "Harry"};
 		Random rand = new Random(System.currentTimeMillis());
 		ArrayList<Artifact> artifacts = ArtifactBuilder.buildArtifacts(level, num / 2);
 		
 		for (int i = 0; i < num / 2; i++) {
 			villains.add(new Villain(names[rand.nextInt(9)],
 									(level - (rand.nextInt(level + 1) - (level + 1 ) / 2)),
-									(rand.nextInt(level + 1) + 1) * level,
-									(rand.nextInt(level + 1) + 1) * level,
-									(rand.nextInt(level + 1) + 1) * level,
+									(rand.nextInt(level + 1) + 1) * (level + 20),
+									(rand.nextInt(level + 1) + 1) * (level + 20),
+									(rand.nextInt(level + 1) + 1) * (level + 20),
 									null,
 									artifacts.get(i)));
 			
@@ -38,7 +38,7 @@ public class VillainBuilder {
 					j = 0;
 				}
 			}
-			currentVillain.setPosition(coords);
+			currentVillain.setPosition(coords);			
 		}
 		
 		return villains;
