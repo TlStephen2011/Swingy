@@ -13,6 +13,7 @@ import za.co.wethinkcode.models.Weapon;
 import za.co.wethinkcode.utilities.Coordinates;
 import za.co.wethinkcode.utilities.VillainBuilder;
 import za.co.wethinkcode.views.Console;
+import za.co.wethinkcode.views.GUI;
 import za.co.wethinkcode.views.Viewable;
 import za.co.wethinkcode.views.Viewable.inputType;
 
@@ -24,8 +25,11 @@ public class GameController {
 	private Viewable view;
 		
 	public GameController() {
-		this.view = new Console();
-		this.hero = this.view.newHero();
+		this.view = new GUI();
+		while (this.hero == null) {
+			this.hero = this.view.newHero();
+		}
+		System.out.println(this.hero.toString());
 		this.makeNewBoard();
 		this.gameBoard.printBoard();
 	}

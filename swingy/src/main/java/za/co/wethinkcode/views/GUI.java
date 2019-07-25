@@ -8,6 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 
 public class GUI implements Viewable {
 
@@ -16,6 +19,7 @@ public class GUI implements Viewable {
 	private JButton newGame;
 	private JMenuBar menu;
 	private JPanel mainPanel;
+	private Hero chosenOne;
 	
 	public GUI() {
 		mainFrame = new JFrame("Swingy");
@@ -37,15 +41,25 @@ public class GUI implements Viewable {
 
 		loadGame = new JButton("Load Game");
 		newGame = new JButton("New Game");
-		loadGame.addActionListener(new ActionListener() {			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//TODO implement load game
-			}
-		});
+//		loadGame.addActionListener(new ActionListener() {			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				chosenOne = chooseHero();
+//			}
+//		});
 		
 		loadGame.setBounds(400, 600, 100, 50);
 		newGame.setBounds(700, 600, 100, 50);
+		
+		newGame.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String name = JOptionPane.showInputDialog("Enter hero name: ");
+				String heroClass = JOptionPane.showInputDialog("Enter her class: ");
+				chosenOne = new Hero(name, heroClass);
+			}
+		});
 		
 		JLabel title = new JLabel("Welcome to Swingy");
 		title.setFont(new Font("Monaco", Font.PLAIN, 20));
@@ -61,10 +75,10 @@ public class GUI implements Viewable {
 		mainFrame.getContentPane().add(menu, BorderLayout.SOUTH);
 		mainFrame.getContentPane().add(mainPanel);
 		mainFrame.setVisible(true);
-//		loadGame = new JButton("Load Game");
-//		newGame = new JButton("New Game");
-//		mainFrame.getContentPane().add(loadGame);
-//		mainFrame.getContentPane().add(newGame);
+	}
+	
+	private Hero chooseHero() {
+		return new Hero("TyroneFromGUI", "GUI_Hero");
 	}
 	
 	@Override
@@ -74,10 +88,8 @@ public class GUI implements Viewable {
 	}
 
 	@Override
-	public Hero newHero() {
-		// TODO Auto-generated method stub
-		System.out.println("Displayed load game");
-		return null;
+	public Hero newHero() {				
+		return chosenOne;		
 	}
 
 	@Override
