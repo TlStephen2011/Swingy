@@ -5,6 +5,7 @@ import java.util.Random;
 import za.co.wethinkcode.utilities.Coordinates;
 
 public class Hero extends Character {
+	private int Id;
 	private String heroClass;
 	private int experience;
 	private Weapon weapon;
@@ -15,6 +16,14 @@ public class Hero extends Character {
 		super(name, 0, 20, 10, 100, new Coordinates(0, 0));
 		this.heroClass = heroClass;
 		this.experience = 0;
+	}
+	
+	public String getHeroClass() {
+		return this.heroClass;
+	}
+	
+	public String getHeroName() {
+		return this.name;
 	}
 	
 	public Hero(	String name,
@@ -29,6 +38,45 @@ public class Hero extends Character {
 					Armor armor,
 					Helm helm) {
 		super(name, level, attackDamage, defensePoints, hitPoints, position);
+		
+		if (weapon != null) {
+			this.weapon = weapon;
+			this.attackDamage += this.weapon.getDamage();
+		}
+		
+		if (armor != null) {
+			this.armor = armor;
+			this.defensePoints += this.armor.getDefense();
+		}
+		
+		if (helm != null) {
+			this.helm = helm;
+			this.hitPoints += this.helm.getHP();
+		}
+		
+		this.experience = experience;
+		this.heroClass = heroClass;
+	}
+	
+	public int getId() {
+		return this.Id;
+	}
+	
+	public Hero(int Id,
+			String name,
+			String heroClass,
+			int level,
+			int experience,
+			int attackDamage,
+			int defensePoints,
+			int hitPoints,
+			Coordinates position,
+			Weapon weapon,
+			Armor armor,
+			Helm helm) {
+		super(name, level, attackDamage, defensePoints, hitPoints, position);
+		
+		this.Id = Id;
 		
 		if (weapon != null) {
 			this.weapon = weapon;
@@ -170,5 +218,9 @@ public class Hero extends Character {
 		}
 		
 		return s;
+	}
+	
+	public void setId(int id) {
+		this.Id = id;
 	}
 }

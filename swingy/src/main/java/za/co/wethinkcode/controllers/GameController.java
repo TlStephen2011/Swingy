@@ -1,21 +1,11 @@
 package za.co.wethinkcode.controllers;
 
 import java.util.ArrayList;
-
-import za.co.wethinkcode.exceptions.*;
-import za.co.wethinkcode.models.Armor;
-import za.co.wethinkcode.models.Artifact;
-import za.co.wethinkcode.models.GameBoard;
-import za.co.wethinkcode.models.Helm;
-import za.co.wethinkcode.models.Hero;
-import za.co.wethinkcode.models.Villain;
-import za.co.wethinkcode.models.Weapon;
-import za.co.wethinkcode.utilities.Coordinates;
-import za.co.wethinkcode.utilities.VillainBuilder;
-import za.co.wethinkcode.views.Console;
-import za.co.wethinkcode.views.GUI;
-import za.co.wethinkcode.views.Viewable;
+import za.co.wethinkcode.views.*;
 import za.co.wethinkcode.views.Viewable.inputType;
+import za.co.wethinkcode.models.*;
+import za.co.wethinkcode.exceptions.*;
+import za.co.wethinkcode.utilities.*;
 
 public class GameController {
 	
