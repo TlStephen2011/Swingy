@@ -26,6 +26,10 @@ public class Hero extends Character {
 		return this.name;
 	}
 	
+	public int getExperience() {
+		return this.experience;
+	}
+	
 	public Hero(	String name,
 					String heroClass,
 					int level,
@@ -223,4 +227,17 @@ public class Hero extends Character {
 	public void setId(int id) {
 		this.Id = id;
 	}
+	
+	public Weapon getWeapon() {
+		return this.weapon;
+	}
+	
+	public Helm getHelm() {
+		return this.helm;
+	}
+	
+	public Armor getArmor() {
+		return this.armor;
+	}
+	
 }
