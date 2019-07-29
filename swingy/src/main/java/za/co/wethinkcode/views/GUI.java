@@ -22,7 +22,7 @@ public class GUI implements Viewable {
 	private Hero chosenOne;
 	
 	public GUI() {
-		mainFrame = new JFrame("Swingy");
+		mainFrame = new JFrame("Swingy"); 
 		mainFrame.setSize(1200, 800);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setResizable(false);				
@@ -56,8 +56,12 @@ public class GUI implements Viewable {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String name = JOptionPane.showInputDialog("Enter hero name: ");
-				String heroClass = JOptionPane.showInputDialog("Enter her class: ");
-				chosenOne = new Hero(name, heroClass);
+				String heroClass = JOptionPane.showInputDialog("Enter hero class: ");
+				if (name.length() != 0 && heroClass.length() != 0)
+					chosenOne = new Hero(name, heroClass);
+				else {
+					JOptionPane.showMessageDialog(mainFrame, "Inputs cannot be empty", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		

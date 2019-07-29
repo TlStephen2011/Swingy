@@ -15,7 +15,7 @@ public class GameController {
 	private Viewable view;
 		
 	public GameController() {
-		this.view = new GUI();
+		this.view = new GUI(); 
 		while (this.hero == null) {
 			this.hero = this.view.newHero();
 		}

@@ -4,6 +4,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import za.co.wethinkcode.models.*;
+import za.co.wethinkcode.utilities.Coordinates;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,6 +30,9 @@ public class HeroStorage {
             + "   class		   VARCHAR(55),"
             + "	  experience   INTEGER,"
             + "   level        INTEGER,"
+            + "   attack       INTEGER,"
+            + "   defense      INTEGER,"
+            + "   hp           INTEGER,"
             + "   armor        VARCHAR(55),"
             + "   armorPoints  INTEGER,"
             + "   helm         VARCHAR(55),"
@@ -58,6 +62,12 @@ public class HeroStorage {
 		values.append(h.getExperience() + ",");
 		sb.append("level,");
 		values.append(h.getLevel() + ",");
+		sb.append("attack,");
+		values.append(h.getDamage() + ",");
+		sb.append("defense,");
+		values.append(h.getDefense() + ",");
+		sb.append("hp,");
+		values.append(h.getHP() + ",");
 		
 		Armor armor = h.getArmor();
 		if (armor != null) {
@@ -91,15 +101,14 @@ public class HeroStorage {
 	private static String buildUpdateQuery(Hero h) {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Update heroes SET name=?, class=?, experience=?, level=?, armor=?, armorPoints=?, helm=?, helmPoints=?, weapon=?, weaponPoints=?");
+		sb.append("Update heroes SET name=?, class=?, experience=?, level=?, attack=?, defense=?, hp=?, armor=?, armorPoints=?, helm=?, helmPoints=?, weapon=?, weaponPoints=?");
 		sb.append(" WHERE id=" + h.getId());
 		
 		
 		return sb.toString();
 	}
 	
-	public static void saveHero(Hero h) {		
-		
+	public static void saveHero(Hero h) {			
 		if (h == null) {
 			return;
 		}
@@ -121,32 +130,35 @@ public class HeroStorage {
 				statement.setString(2, h.getHeroClass());
 				statement.setInt(3, h.getExperience());
 				statement.setInt(4, h.getLevel());
+				statement.setInt(5, h.getDamage());
+				statement.setInt(6, h.getDefense());
+				statement.setInt(7, h.getHP());
 				
 				Armor armor = h.getArmor();
 				if (armor != null) {
-					statement.setString(5, armor.name);
-					statement.setInt(6, armor.getDefense());
+					statement.setString(8, armor.name);
+					statement.setInt(9, armor.getDefense());
 				} else {
-					statement.setString(5, "");
-					statement.setInt(6, 0);
+					statement.setString(8, "");
+					statement.setInt(9, 0);
 				}
 				
 				Helm helm = h.getHelm();
 				if (helm != null) {
-					statement.setString(7, helm.name);
-					statement.setInt(8, helm.getHP());
+					statement.setString(10, helm.name);
+					statement.setInt(11, helm.getHP());
 				} else {
-					statement.setString(7, "");
-					statement.setInt(8, 0);
+					statement.setString(10, "");
+					statement.setInt(11, 0);
 				}
 				
 				Weapon weapon = h.getWeapon();
 				if (weapon != null) {
-					statement.setString(9, weapon.name);
-					statement.setInt(10, weapon.getDamage());
+					statement.setString(12, weapon.name);
+					statement.setInt(13, weapon.getDamage());
 				} else {
-					statement.setString(9, "");
-					statement.setInt(10, 0);
+					statement.setString(12, "");
+					statement.setInt(13, 0);
 				}
 				
 				statement.executeUpdate();				
@@ -154,8 +166,6 @@ public class HeroStorage {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("QUERY: " + query);		
-
 	}
 	
 	public static ArrayList<Hero> getAllHeroes() {
@@ -167,10 +177,32 @@ public class HeroStorage {
 			heroes = new ArrayList<Hero>();
 			
 			while (res.next()) {
-				//TODO build proper hero
-				Hero h = new Hero(res.getString("name"), res.getString("class"));
+				Hero h = new Hero(
+					res.getString("name"),
+					res.getString("class"),
+					res.getInt("level"),
+					res.getInt("experience"),
+					res.getInt("attack"),
+					res.getInt("defense"),
+					res.getInt("hp"),
+					new Coordinates(0, 0));
 				h.setId(res.getInt("id"));
-				System.out.println(res.getInt("id"));
+				
+				String weapon = res.getString("weapon");
+				if (weapon.length() > 0) {
+					h.equip(new Weapon(weapon, res.getInt("weaponPoints")));
+				}
+				
+				String armor = res.getString("armor");
+				if (armor.length() > 0) {
+					h.equip(new Armor(armor, res.getInt("armorPoints")));
+				}
+				
+				String helm = res.getString("helm");
+				if (helm.length() > 0) {
+					h.equip(new Helm(helm, res.getInt("helmPoints")));
+				}
+				
 				heroes.add(h);				
 			}
 			

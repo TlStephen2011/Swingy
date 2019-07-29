@@ -146,6 +146,14 @@ public class Hero extends Character {
 		return this.attackDamage;
 	}
 	
+	public int getDefense() {
+		return this.defensePoints;
+	}
+	
+	public int getHP() {
+		return this.hitPoints;
+	}
+	
 	public void takeDamage(int x) {
 		this.hitPoints = this.hitPoints - x < 0 ? 0 : this.hitPoints - x;
 	}
