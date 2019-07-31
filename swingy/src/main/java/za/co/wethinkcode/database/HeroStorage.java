@@ -189,17 +189,17 @@ public class HeroStorage {
 				h.setId(res.getInt("id"));
 				
 				String weapon = res.getString("weapon");
-				if (weapon.length() > 0) {
+				if (weapon != null && weapon.length() > 0) {
 					h.equip(new Weapon(weapon, res.getInt("weaponPoints")));
 				}
 				
 				String armor = res.getString("armor");
-				if (armor.length() > 0) {
+				if (armor != null && armor.length() > 0) {
 					h.equip(new Armor(armor, res.getInt("armorPoints")));
 				}
 				
 				String helm = res.getString("helm");
-				if (helm.length() > 0) {
+				if (helm != null && helm.length() > 0) {
 					h.equip(new Helm(helm, res.getInt("helmPoints")));
 				}
 				

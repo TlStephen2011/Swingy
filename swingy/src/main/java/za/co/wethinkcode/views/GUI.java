@@ -1,5 +1,6 @@
 package za.co.wethinkcode.views;
 
+import za.co.wethinkcode.database.HeroStorage;
 import za.co.wethinkcode.models.Artifact;
 import za.co.wethinkcode.models.GameBoard;
 import za.co.wethinkcode.models.Hero;
@@ -8,12 +9,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 
 public class GUI implements Viewable {
 
+	private ArrayList<Hero> savedHeroes;
+	
 	private JFrame mainFrame; 
 	private JButton loadGame;
 	private JButton newGame;
@@ -21,11 +27,23 @@ public class GUI implements Viewable {
 	private JPanel mainPanel;
 	private Hero chosenOne;
 	
+	private JFrame loadGameFrame;
+	private DefaultListModel<String> listModel; 
+    private javax.swing.JLabel availableHeroesLabel;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel heroDetailsLabel;
+    private javax.swing.JTextPane heroDetailsPane;
+    private javax.swing.JList<String> heroList;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton selectHeroButton;
+	
 	public GUI() {
 		mainFrame = new JFrame("Swingy"); 
 		mainFrame.setSize(1200, 800);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setResizable(false);				
+		listModel = new DefaultListModel<String>();
 		
 		menu = new JMenuBar();
 		JMenu m1 = new JMenu("OPTIONS");
@@ -41,12 +59,19 @@ public class GUI implements Viewable {
 
 		loadGame = new JButton("Load Game");
 		newGame = new JButton("New Game");
-//		loadGame.addActionListener(new ActionListener() {			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				chosenOne = chooseHero();
-//			}
-//		});
+		loadGame.addActionListener(new ActionListener() {			
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadGameFrame = new JFrame();
+				mainFrame.setVisible(false);
+				initLoadGameFrameComponents();				
+				savedHeroes = HeroStorage.getAllHeroes();								
+				loadHeroesToList();
+				loadGameFrame.setVisible(true);
+			}
+			
+		});
 		
 		loadGame.setBounds(400, 600, 100, 50);
 		newGame.setBounds(700, 600, 100, 50);
@@ -155,5 +180,125 @@ public class GUI implements Viewable {
 		// TODO Auto-generated method stub
 
 	}
+	
+    private void selectHeroButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }                                                
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    	loadGameFrame.dispatchEvent(
+    			new WindowEvent(
+    					loadGameFrame,
+    					WindowEvent.WINDOW_CLOSING
+    				)
+    			);
+
+    	
+    	mainFrame.setVisible(true);
+    }      
+	
+    private void loadHeroesToList() {    
+		if (savedHeroes == null)
+			return;
+    	
+    	int listSize = savedHeroes.size();
+		
+    	
+    	if (listModel == null || listModel.size() != 0) {
+			listModel = new DefaultListModel<String>();
+		}
+		
+    	for (int i = 0; i < listSize; i++) {
+    		listModel.addElement(savedHeroes.get(i).getHeroName());
+		}
+    	
+    	heroList.setModel(listModel);
+    }
+    
+	private void initLoadGameFrameComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();        
+        heroList = new javax.swing.JList<String>();
+        availableHeroesLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        heroDetailsPane = new javax.swing.JTextPane();
+        heroDetailsLabel = new javax.swing.JLabel();
+        selectHeroButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+
+        loadGameFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jScrollPane1.setViewportView(heroList);
+
+        availableHeroesLabel.setText("Available Heroes");
+
+        heroDetailsPane.setEditable(false);
+        jScrollPane2.setViewportView(heroDetailsPane);
+
+        heroDetailsLabel.setText("Hero Details");
+
+        selectHeroButton.setText("Select Hero");
+        selectHeroButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectHeroButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(loadGameFrame.getContentPane());
+        loadGameFrame.getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(107, 107, 107)
+                .addComponent(availableHeroesLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(heroDetailsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(128, 128, 128))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(149, 149, 149)
+                .addComponent(selectHeroButton, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(62, 62, 62)
+                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(availableHeroesLabel)
+                    .addComponent(heroDetailsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(selectHeroButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+
+    	loadGameFrame.addWindowListener(new WindowAdapter() {
+    	    public void windowClosing(WindowEvent e) {
+    	    	mainFrame.setVisible(true);
+    	    }
+    	});
+        
+        loadGameFrame.pack();
+    }
 
 }
