@@ -219,6 +219,7 @@ public class GUI implements Viewable {
 
         jScrollPane1 = new javax.swing.JScrollPane();        
         heroList = new javax.swing.JList<String>();
+        heroList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         availableHeroesLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         heroDetailsPane = new javax.swing.JTextPane();
