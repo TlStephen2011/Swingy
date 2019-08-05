@@ -82,7 +82,7 @@ public class GUI implements Viewable {
 			public void actionPerformed(ActionEvent e) {
 				String name = JOptionPane.showInputDialog("Enter hero name: ");
 				String heroClass = JOptionPane.showInputDialog("Enter hero class: ");
-				if (name.length() != 0 && heroClass.length() != 0)
+				if (name != null && heroClass != null && name.length() != 0 && heroClass.length() != 0)
 					chosenOne = new Hero(name, heroClass);
 				else {
 					JOptionPane.showMessageDialog(mainFrame, "Inputs cannot be empty", "Invalid Input", JOptionPane.ERROR_MESSAGE);
