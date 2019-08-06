@@ -10,7 +10,7 @@ public class App
     {
     	HeroStorage.connect();
     		
-    	GameController controller = new GameController();
+    	GameController controller = new GameController("gui");
     	while (controller.run()) {}
     	
     }
