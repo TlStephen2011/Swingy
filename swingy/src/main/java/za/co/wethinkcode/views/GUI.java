@@ -6,15 +6,15 @@ import za.co.wethinkcode.models.GameBoard;
 import za.co.wethinkcode.models.Hero;
 import za.co.wethinkcode.models.Villain;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
 
 public class GUI implements Viewable {
 
@@ -26,6 +26,7 @@ public class GUI implements Viewable {
 	private JMenuBar menu;
 	private JPanel mainPanel;
 	private Hero chosenOne;
+	private JFrame gameFrame;
 	
 	private JFrame loadGameFrame;
 	private DefaultListModel<String> listModel; 
@@ -38,6 +39,27 @@ public class GUI implements Viewable {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton selectHeroButton;
 	
+    // Variables declaration - gameFrame                   
+    private javax.swing.JLabel combatCommandsLabel;
+    private javax.swing.JPanel combatPanel;
+    private javax.swing.JButton eastButton;
+    private javax.swing.JButton fightButton;
+    private javax.swing.JScrollPane gameLogPane;
+    private javax.swing.JButton leaveItemButton;
+    private javax.swing.JLabel logLabel;
+    private javax.swing.JTextPane logTextPane;
+    private javax.swing.JLabel movementCommandsLabel;
+    private javax.swing.JPanel movementPanel;
+    private javax.swing.JButton northButton;
+    private javax.swing.JButton runButton;
+    private javax.swing.JButton southButton;
+    private javax.swing.JButton takeItemButton;
+    private javax.swing.JButton westButton;
+    // End of variables declaration  
+    
+    private inputType movementDirection;
+    private inputType fightOption;
+    
 	public GUI() {
 		mainFrame = new JFrame("Swingy"); 
 		mainFrame.setSize(1200, 800);
@@ -106,10 +128,6 @@ public class GUI implements Viewable {
 		mainFrame.setVisible(true);
 	}
 	
-	private Hero chooseHero() {
-		return new Hero("TyroneFromGUI", "GUI_Hero");
-	}
-	
 	@Override
 	public void display(GameBoard g, String x) {
 		// TODO Auto-generated method stub
@@ -118,19 +136,18 @@ public class GUI implements Viewable {
 
 	@Override
 	public Hero newHero() {				
-		return chosenOne;		
+		return chosenOne;
 	}
 
 	@Override
 	public inputType getMovementDirection() {
-		// TODO Auto-generated method stub
-		return null;
+		return movementDirection;
 	}
 
 	@Override
 	public inputType showEnemyEncounter(Villain v) {
-		// TODO Auto-generated method stub
-		return null;
+		logTextPane.setText("You have encountered a villain: \n" + v.toString());
+		return fightOption;
 	}
 
 	@Override
@@ -182,7 +199,14 @@ public class GUI implements Viewable {
 	}
 	
     private void selectHeroButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        // TODO add your handling code here:
+    	
+    	int selectedHeroIndex = heroList.getSelectedIndex();
+    	
+    	if (selectedHeroIndex == -1) {
+    		return;
+    	}
+    	
+    	chosenOne = savedHeroes.get(selectedHeroIndex);
     }                                                
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -215,6 +239,20 @@ public class GUI implements Viewable {
     	heroList.setModel(listModel);
     }
     
+    private void listSelectionActionPerformed() {
+    	//Get details from hero storage for the index selected
+    	int selectedIndex = heroList.getSelectedIndex();
+    	
+    	if (selectedIndex == -1) {
+    		return;
+    	}
+    	
+    	Hero selectedHero = savedHeroes.get(selectedIndex);
+    	
+    	//Display hero.toString to heroDetailsPane
+    	heroDetailsPane.setText(selectedHero.toString());
+    }
+    
 	private void initLoadGameFrameComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();        
@@ -228,7 +266,7 @@ public class GUI implements Viewable {
         cancelButton = new javax.swing.JButton();
 
         loadGameFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
+        loadGameFrame.setResizable(false);
         jScrollPane1.setViewportView(heroList);
 
         availableHeroesLabel.setText("Available Heroes");
@@ -299,7 +337,246 @@ public class GUI implements Viewable {
     	    }
     	});
         
+    	heroList.addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				listSelectionActionPerformed();
+			}
+		});
+    	
         loadGameFrame.pack();
+    }
+	
+	public void loadMainGameComponents() {
+
+		gameFrame = new JFrame();
+        gameLogPane = new javax.swing.JScrollPane();
+        logTextPane = new javax.swing.JTextPane();
+        logLabel = new javax.swing.JLabel();
+        movementPanel = new javax.swing.JPanel();
+        northButton = new javax.swing.JButton();
+        movementCommandsLabel = new javax.swing.JLabel();
+        southButton = new javax.swing.JButton();
+        eastButton = new javax.swing.JButton();
+        westButton = new javax.swing.JButton();
+        combatPanel = new javax.swing.JPanel();
+        fightButton = new javax.swing.JButton();
+        combatCommandsLabel = new javax.swing.JLabel();
+        runButton = new javax.swing.JButton();
+        takeItemButton = new javax.swing.JButton();
+        leaveItemButton = new javax.swing.JButton();
+
+        gameFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        gameFrame.setResizable(false);
+        
+        gameLogPane.setViewportView(logTextPane);
+
+        logLabel.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
+        logLabel.setText("GAME LOG");
+
+        northButton.setText("NORTH");
+        northButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                northButtonActionPerformed(evt);
+            }
+        });
+
+        movementCommandsLabel.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
+        movementCommandsLabel.setText("MOVEMENT COMMANDS");
+
+        southButton.setText("SOUTH");
+        southButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                southButtonActionPerformed(evt);
+            }
+        });
+
+        eastButton.setText("EAST");
+        eastButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eastButtonActionPerformed(evt);
+            }
+        });
+
+        westButton.setText("WEST");
+        westButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                westButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout movementPanelLayout = new javax.swing.GroupLayout(movementPanel);
+        movementPanel.setLayout(movementPanelLayout);
+        movementPanelLayout.setHorizontalGroup(
+            movementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, movementPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(movementCommandsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(157, 157, 157))
+            .addGroup(movementPanelLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(movementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(northButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eastButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
+                .addGroup(movementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(southButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(westButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(63, 63, 63))
+        );
+        movementPanelLayout.setVerticalGroup(
+            movementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(movementPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(movementCommandsLabel)
+                .addGap(41, 41, 41)
+                .addGroup(movementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(northButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(southButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(movementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(eastButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(westButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(46, Short.MAX_VALUE))
+        );
+
+        fightButton.setText("FIGHT");
+        fightButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fightButtonActionPerformed(evt);
+            }
+        });
+
+        combatCommandsLabel.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
+        combatCommandsLabel.setText("COMBAT COMMANDS");
+
+        runButton.setText("RUN");
+        runButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runButtonActionPerformed(evt);
+            }
+        });
+
+        takeItemButton.setText("TAKE ITEM");
+        takeItemButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                takeItemButtonActionPerformed(evt);
+            }
+        });
+
+        leaveItemButton.setText("LEAVE ITEM");
+        leaveItemButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                leaveItemButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout combatPanelLayout = new javax.swing.GroupLayout(combatPanel);
+        combatPanel.setLayout(combatPanelLayout);
+        combatPanelLayout.setHorizontalGroup(
+            combatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(combatPanelLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(combatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(takeItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(combatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(leaveItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(63, 63, 63))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, combatPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(combatCommandsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(150, 150, 150))
+        );
+        combatPanelLayout.setVerticalGroup(
+            combatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(combatPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(combatCommandsLabel)
+                .addGap(41, 41, 41)
+                .addGroup(combatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fightButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(combatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(takeItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(leaveItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(gameFrame.getContentPane());
+        gameFrame.getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(movementPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(combatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(gameLogPane, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(146, 146, 146))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(logLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(combatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                        .addComponent(movementPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(gameLogPane))
+                .addGap(48, 48, 48))
+        );
+
+        gameFrame.pack();
+        gameFrame.setVisible(true);
+    }                      
+
+    private void northButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    	movementDirection = inputType.NORTH;
+    }                                           
+
+    private void southButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void eastButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        // TODO add your handling code here:
+    }                                          
+
+    private void westButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        // TODO add your handling code here:
+    }                                          
+
+    private void fightButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    	fightOption = inputType.FIGHT;
+    }                                           
+
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        // TODO add your handling code here:
+    }                                         
+
+    private void takeItemButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        // TODO add your handling code here:
+    }                                              
+
+    private void leaveItemButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        // TODO add your handling code here:
     }
 
 }

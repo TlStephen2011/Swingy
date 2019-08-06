@@ -18,8 +18,12 @@ public class GameController {
 		this.view = new GUI(); 
 		while (this.hero == null) {
 			this.hero = this.view.newHero();
+			if (this.hero == null) {
+				System.out.println("Hero is not yet ready");
+			}
 		}
 		System.out.println(this.hero.toString());
+		
 		this.makeNewBoard();
 		this.gameBoard.printBoard();
 	}
@@ -27,14 +31,27 @@ public class GameController {
 	public boolean run() {
 		boolean activeGame = true;
 
+		if (this.view instanceof GUI) {
+			((GUI) this.view).loadMainGameComponents();
+		}
+		
 		while (activeGame) {
-			inputType in = this.view.getMovementDirection();
+			inputType in = null;
+			
+			while (in == null) {
+				in = this.view.getMovementDirection();
+				System.out.println("Waiting for movement direction");
+			}
 
 			try {
 				handleMovement(in);
 			} catch (RequiredToFightException e) {
 				Villain v = e.getVillain();
-				inputType t = this.view.showEnemyEncounter(v);
+				inputType t = null;
+				while (t == null) {
+					this.view.showEnemyEncounter(v);					
+				}
+				
 				Artifact a = null;
 
 				try {
@@ -52,7 +69,7 @@ public class GameController {
 				this.view.showWonCurrentMap();
 				this.makeNewBoard();				
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				System.out.println(e.getMessage());				
 				System.exit(1);
 			}
 			
