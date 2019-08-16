@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.StyledDocument;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +16,7 @@ import java.awt.event.WindowEvent;
 
 import za.co.wethinkcode.controllers.GuiController;
 import za.co.wethinkcode.database.HeroStorage;
+import za.co.wethinkcode.exceptions.RequiredToFightException;
 import za.co.wethinkcode.models.Hero;
 import za.co.wethinkcode.views.Viewable.inputType;
 
@@ -513,17 +515,39 @@ public class GUI {
     private void northButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
     	for (int i = 0; i < observers.size(); i++) {
-    		boolean moved = observers.get(i).handleMovement(inputType.NORTH);
+    		
+    		boolean moved = false;
+    		
+    		try {				
+    			moved = observers.get(i).handleMovement(inputType.NORTH);
+			} catch (RequiredToFightException e) {
+				// TODO: handle fight
+				
+			} catch (IndexOutOfBoundsException e) {
+				// TODO: handle new map generation
+			} catch (Exception e) {
+				// TODO: failure block
+			}
     		
     		if (moved == true) {
-    			//Log that we moved north
+    			appendToLog("You have moved NORTH");
     		} else {
     			//Show pop up dialog that invalid input
+    			JOptionPane.showMessageDialog(gameFrame, "You cannot perform this action now", "Invalid move", JOptionPane.ERROR_MESSAGE);
     		}
-    		
     	}
     }                                           
 
+    private void appendToLog(String x) {
+    	StyledDocument doc = logTextPane.getStyledDocument();
+    	
+    	try {
+    		doc.insertString(doc.getLength(), x + "\n", null);
+    	} catch (Exception e) {
+    		System.out.println("Error appending to logPane: " + x);
+		}
+    }
+    
     private void southButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
     }                                           

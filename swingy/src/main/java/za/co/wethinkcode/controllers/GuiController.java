@@ -3,6 +3,8 @@ package za.co.wethinkcode.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import za.co.wethinkcode.exceptions.OccupiedByVillainException;
+import za.co.wethinkcode.exceptions.RequiredToFightException;
 import za.co.wethinkcode.models.GameBoard;
 import za.co.wethinkcode.models.Hero;
 import za.co.wethinkcode.models.Villain;
@@ -19,12 +21,12 @@ public class GuiController {
 	List<inputType> status = new ArrayList<inputType>();
 	GameBoard gameBoard;
 	ArrayList<Villain> villains;
+	inputType bufferedMove;
 	
 	public GuiController() {
 		//Initialize GUI
 		view = new GUI();
-		view.register(this);
-		makeNewBoard();
+		view.register(this);		
 		allowAllMovement();
 	}
 
@@ -35,13 +37,77 @@ public class GuiController {
 	
 	public void newHero(Hero h) {
 		myHero = h;
+		makeNewBoard();
 		System.out.println(h.toString());
 	}
 	
-	public boolean handleMovement(inputType in) {
+	public boolean handleMovement(inputType in) throws RequiredToFightException {
+		
+		gameBoard.printBoard();
+		System.out.println();
+		
+		
+		boolean isValid = checkValidMove(in); 
+		
+		if (!isValid) {
+			return false;
+		}
+
+		Coordinates newCoords = new Coordinates(-1, -1); 
+		Coordinates current = myHero.getPosition();
+		
+		if (in == inputType.NORTH) {
+			newCoords = new Coordinates(current.getRow() - 1, current.getCol());
+		} else if (in == inputType.SOUTH) {
+			newCoords = new Coordinates(current.getRow() + 1, current.getCol());
+		} else if (in == inputType.EAST) {
+			newCoords = new Coordinates(current.getRow(), current.getCol() + 1);
+		} else if (in == inputType.WEST) {
+			newCoords = new Coordinates(current.getRow(), current.getCol() - 1);
+		}
+		
+		try {
+			gameBoard.move(current, newCoords);
+		} catch (OccupiedByVillainException e) {
+			
+			bufferedMove = in;
+			allowFightMovement();
+			
+			throw new RequiredToFightException(e.getVillain());
+		} catch (IndexOutOfBoundsException e) {
+			// Make new map and tell view that he won the level || by throwing IndexOutOfBounds?
+		} catch (Exception e) {
+			// Failure case
+		}
+		
+		/*if (in == status.get(i)) {
+			//Move the hero
+			try {
+				Coordinates current = myHero.getPosition();
+				gameBoard.move(current, new Coordinates(current.getRow() - 1, current.getCol()));
+			} catch (OccupiedByVillainException e) {
+				// TODO: handle exception
+				
+				bufferedMove = in;
+				allowFightMovement();
+				
+				throw new RequiredToFightException(e.getVillain());
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}*/
+		return true;
+	}
+	
+	private void allowFightMovement() {
+		status = new ArrayList<inputType>();
+		status.add(inputType.FIGHT);
+		status.add(inputType.RUN);
+	}
+	
+	private boolean checkValidMove(inputType in) {
 		for (int i = 0; i < status.size(); i++) {
 			if (in == status.get(i)) {
-				//first check if required to fight
 				return true;
 			}
 		}
