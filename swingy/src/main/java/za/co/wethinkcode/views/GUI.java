@@ -23,6 +23,7 @@ import za.co.wethinkcode.views.Viewable.inputType;
 public class GUI {
 
 	List<GuiController> observers = new ArrayList<GuiController>(20);
+	GuiController observer = null;
 	
 	private ArrayList<Hero> savedHeroes;
 	
@@ -72,6 +73,7 @@ public class GUI {
 	
 	public void register(GuiController c) {
 		observers.add(c);
+		observer = c;
 	}
 
 	private void initStartGameFrame() {
@@ -512,21 +514,23 @@ public class GUI {
         gameFrame.pack();
     }                      
 
-    private void northButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
-    	for (int i = 0; i < observers.size(); i++) {
-    		
+    private void northButtonActionPerformed(java.awt.event.ActionEvent evt) {
     		boolean moved = false;
     		
     		try {				
-    			moved = observers.get(i).handleMovement(inputType.NORTH);
-			} catch (RequiredToFightException e) {
-				// TODO: handle fight
-				
+    			moved = observer.handleMovement(inputType.NORTH);
+			} catch (RequiredToFightException e) {				
+				appendToLog("You have encountered a villain:");
+				appendToLog(e.getVillain().toString());
+				return;
 			} catch (IndexOutOfBoundsException e) {
-				// TODO: handle new map generation
+				appendToLog("You have entered the void and are suddenly placed on a new map");
+				notifyNewMap();
+				return;
 			} catch (Exception e) {
-				// TODO: failure block
+				//TODO: might adjust
+				appendToLog("Something went wrong managing input");
+				return;
 			}
     		
     		if (moved == true) {
@@ -535,10 +539,13 @@ public class GUI {
     			//Show pop up dialog that invalid input
     			JOptionPane.showMessageDialog(gameFrame, "You cannot perform this action now", "Invalid move", JOptionPane.ERROR_MESSAGE);
     		}
-    	}
     }                                           
 
-    private void appendToLog(String x) {
+    private void notifyNewMap() {
+    	observer.newMap();		
+	}
+
+	private void appendToLog(String x) {
     	StyledDocument doc = logTextPane.getStyledDocument();
     	
     	try {
@@ -561,7 +568,15 @@ public class GUI {
     }                                          
 
     private void fightButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
+    	boolean fight = false;
+    	
+    	try {
+			for (int i = 0; i < observers.size(); i++) {
+				fight = observers.get(i).handleFight();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
     }                                           
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          

@@ -75,10 +75,13 @@ public class GuiController {
 			
 			throw new RequiredToFightException(e.getVillain());
 		} catch (IndexOutOfBoundsException e) {
-			// Make new map and tell view that he won the level || by throwing IndexOutOfBounds?
+			throw new IndexOutOfBoundsException();
 		} catch (Exception e) {
-			// Failure case
+			System.out.println(e.getMessage());
+			System.exit(1);
 		}
+		
+		myHero.setPosition(newCoords);
 		
 		/*if (in == status.get(i)) {
 			//Move the hero
@@ -137,6 +140,15 @@ public class GuiController {
 		status.add(inputType.EAST);
 		status.add(inputType.SOUTH);
 		status.add(inputType.WEST);
+	}
+
+	public boolean handleFight() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void newMap() {
+		makeNewBoard();
 	}
 	
 }
