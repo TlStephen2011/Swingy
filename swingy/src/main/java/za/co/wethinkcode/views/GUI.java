@@ -571,11 +571,9 @@ public class GUI {
     	boolean fight = false;
     	
     	try {
-			for (int i = 0; i < observers.size(); i++) {
-				fight = observers.get(i).handleFight();
-			}
+			observer.handleFight(inputType.FIGHT);
 		} catch (Exception e) {
-			// TODO: handle exception
+						
 		}
     }                                           
 

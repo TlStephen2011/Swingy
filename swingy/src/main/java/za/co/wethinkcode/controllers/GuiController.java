@@ -3,8 +3,11 @@ package za.co.wethinkcode.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import za.co.wethinkcode.exceptions.ArtifactDroppedException;
+import za.co.wethinkcode.exceptions.GameOverException;
 import za.co.wethinkcode.exceptions.OccupiedByVillainException;
 import za.co.wethinkcode.exceptions.RequiredToFightException;
+import za.co.wethinkcode.models.Artifact;
 import za.co.wethinkcode.models.GameBoard;
 import za.co.wethinkcode.models.Hero;
 import za.co.wethinkcode.models.Villain;
@@ -22,6 +25,8 @@ public class GuiController {
 	GameBoard gameBoard;
 	ArrayList<Villain> villains;
 	inputType bufferedMove;
+	Villain activeVillain = null;
+	Artifact dropped = null;
 	
 	public GuiController() {
 		//Initialize GUI
@@ -73,6 +78,7 @@ public class GuiController {
 			bufferedMove = in;
 			allowFightMovement();
 			
+			activeVillain = e.getVillain();			
 			throw new RequiredToFightException(e.getVillain());
 		} catch (IndexOutOfBoundsException e) {
 			throw new IndexOutOfBoundsException();
@@ -142,13 +148,45 @@ public class GuiController {
 		status.add(inputType.WEST);
 	}
 
-	public boolean handleFight() {
-		// TODO Auto-generated method stub
+	public boolean handleFight(inputType in) throws ArtifactDroppedException, GameOverException {
+		if (in == inputType.FIGHT) {
+			
+			if (myHero.attack(activeVillain) == true) {
+				dropped = activeVillain.dropArtifact();
+				
+				if (dropped != null) {
+					allowArtifactInteraction();
+					throw new ArtifactDroppedException(dropped);
+				}
+				
+				gameBoard.dropPosition(activeVillain.getPosition());
+				allowAllMovement();
+				try {
+					handleMovement(bufferedMove);
+				} catch (Exception e) {
+					System.out.println("Wtf??");
+					System.exit(1);
+				}
+				return true;
+			} else {
+				throw new GameOverException();
+			}
+			
+		} else if (in == inputType.RUN) {
+			
+		}
+		
 		return false;
 	}
 
 	public void newMap() {
 		makeNewBoard();
+	}
+	
+	private void allowArtifactInteraction() {
+		status = new ArrayList<inputType>();
+		status.add(inputType.TAKE_ITEM);
+		status.add(inputType.LEAVE_ITEM);		
 	}
 	
 }
