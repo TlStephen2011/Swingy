@@ -149,6 +149,13 @@ public class GuiController {
 	}
 
 	public boolean handleFight(inputType in) throws ArtifactDroppedException, GameOverException {
+		
+		boolean valid = checkValidMove(in);
+		
+		if (!valid) {
+			return false;
+		}
+		
 		if (in == inputType.FIGHT) {
 			
 			if (myHero.attack(activeVillain) == true) {
@@ -187,6 +194,18 @@ public class GuiController {
 		status = new ArrayList<inputType>();
 		status.add(inputType.TAKE_ITEM);
 		status.add(inputType.LEAVE_ITEM);		
+	}
+
+	public boolean handleTakeItem(inputType in) {
+		
+		boolean valid = checkValidMove(in);
+		
+		if (!valid) {
+			return false;
+		}
+		
+		
+		
 	}
 	
 }

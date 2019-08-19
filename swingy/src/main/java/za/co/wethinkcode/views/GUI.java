@@ -16,6 +16,8 @@ import java.awt.event.WindowEvent;
 
 import za.co.wethinkcode.controllers.GuiController;
 import za.co.wethinkcode.database.HeroStorage;
+import za.co.wethinkcode.exceptions.ArtifactDroppedException;
+import za.co.wethinkcode.exceptions.GameOverException;
 import za.co.wethinkcode.exceptions.RequiredToFightException;
 import za.co.wethinkcode.models.Hero;
 import za.co.wethinkcode.views.Viewable.inputType;
@@ -522,6 +524,7 @@ public class GUI {
 			} catch (RequiredToFightException e) {				
 				appendToLog("You have encountered a villain:");
 				appendToLog(e.getVillain().toString());
+				appendToLog("You can either fight or run.");
 				return;
 			} catch (IndexOutOfBoundsException e) {
 				appendToLog("You have entered the void and are suddenly placed on a new map");
@@ -567,13 +570,27 @@ public class GUI {
         // TODO add your handling code here:
     }                                          
 
-    private void fightButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-    	boolean fight = false;
-    	
+    private void fightButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               	
     	try {
-			observer.handleFight(inputType.FIGHT);
-		} catch (Exception e) {
-						
+			boolean valid = observer.handleFight(inputType.FIGHT);
+			
+			if (!valid) {
+				JOptionPane.showMessageDialog(gameFrame, "You cannot perform this action now", "Invalid move", JOptionPane.ERROR_MESSAGE);				
+				return;
+			}
+			
+			appendToLog("");
+			appendToLog("You managed to defeat the beast");
+			appendToLog("");			
+		} catch (ArtifactDroppedException e) {
+			appendToLog("");
+			appendToLog("You managed to defeat the beast");
+			appendToLog("");
+			appendToLog("The artifact has been dropped. You can either take or leave it");
+		} catch (GameOverException e) {
+			// handle game over
+			System.out.println("END OF GAME");
+			System.exit(1);
 		}
     }                                           
 
@@ -582,7 +599,15 @@ public class GUI {
     }                                         
 
     private void takeItemButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        // TODO add your handling code here:
+    	boolean valid = observer.handleTakeItem(inputType.TAKE_ITEM);
+    	
+    	if (!valid) {
+    		JOptionPane.showMessageDialog(gameFrame, "You cannot perform this action now", "Invalid move", JOptionPane.ERROR_MESSAGE);
+    		return;
+    	}
+
+    	appendToLog("You have equipped the artifact");
+    	appendToLog("");    	
     }                                              
 
     private void leaveItemButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
