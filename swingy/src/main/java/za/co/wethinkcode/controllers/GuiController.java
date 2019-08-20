@@ -7,10 +7,13 @@ import za.co.wethinkcode.exceptions.ArtifactDroppedException;
 import za.co.wethinkcode.exceptions.GameOverException;
 import za.co.wethinkcode.exceptions.OccupiedByVillainException;
 import za.co.wethinkcode.exceptions.RequiredToFightException;
+import za.co.wethinkcode.models.Armor;
 import za.co.wethinkcode.models.Artifact;
 import za.co.wethinkcode.models.GameBoard;
+import za.co.wethinkcode.models.Helm;
 import za.co.wethinkcode.models.Hero;
 import za.co.wethinkcode.models.Villain;
+import za.co.wethinkcode.models.Weapon;
 import za.co.wethinkcode.utilities.Coordinates;
 import za.co.wethinkcode.utilities.VillainBuilder;
 import za.co.wethinkcode.views.GUI;
@@ -48,10 +51,6 @@ public class GuiController {
 	
 	public boolean handleMovement(inputType in) throws RequiredToFightException {
 		
-		gameBoard.printBoard();
-		System.out.println();
-		
-		
 		boolean isValid = checkValidMove(in); 
 		
 		if (!isValid) {
@@ -88,23 +87,8 @@ public class GuiController {
 		}
 		
 		myHero.setPosition(newCoords);
-		
-		/*if (in == status.get(i)) {
-			//Move the hero
-			try {
-				Coordinates current = myHero.getPosition();
-				gameBoard.move(current, new Coordinates(current.getRow() - 1, current.getCol()));
-			} catch (OccupiedByVillainException e) {
-				// TODO: handle exception
-				
-				bufferedMove = in;
-				allowFightMovement();
-				
-				throw new RequiredToFightException(e.getVillain());
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}*/
+		gameBoard.printBoard();
+		System.out.println();
 		return true;
 	}
 	
@@ -148,7 +132,7 @@ public class GuiController {
 		status.add(inputType.WEST);
 	}
 
-	public boolean handleFight(inputType in) throws ArtifactDroppedException, GameOverException {
+	public boolean handleFight(inputType in) throws ArtifactDroppedException, GameOverException, RequiredToFightException {
 		
 		boolean valid = checkValidMove(in);
 		
@@ -160,6 +144,10 @@ public class GuiController {
 			
 			if (myHero.attack(activeVillain) == true) {
 				dropped = activeVillain.dropArtifact();
+				
+				//Level up
+				int level = myHero.getLevel();				
+				myHero.getXp(activeVillain.getLevel() * 100 + 100);
 				
 				if (dropped != null) {
 					allowArtifactInteraction();
@@ -180,6 +168,17 @@ public class GuiController {
 			}
 			
 		} else if (in == inputType.RUN) {
+			
+			boolean ranAway = myHero.run(activeVillain);
+			
+			if (ranAway == true) {
+				allowAllMovement();
+				bufferedMove = null;
+				activeVillain = null;
+				return true;
+			} else {
+				throw new RequiredToFightException(activeVillain);
+			}
 			
 		}
 		
@@ -204,8 +203,29 @@ public class GuiController {
 			return false;
 		}
 		
+		if (dropped instanceof Weapon) {
+			myHero.setWeapon((Weapon)dropped);
+		} else if (dropped instanceof Armor) {
+			myHero.setArmor((Armor)dropped);
+		} else if (dropped instanceof Helm) {
+			myHero.setHelm((Helm)dropped);
+		}
 		
+		allowAllMovement();		
 		
+		return true;
+	}
+
+	public boolean handleLeaveItem(inputType leaveItem) {
+		
+		boolean valid = checkValidMove(inputType.LEAVE_ITEM);
+		
+		if (!valid) {
+			return false;
+		}
+		
+		allowAllMovement();
+		return true;
 	}
 	
 }

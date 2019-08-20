@@ -559,15 +559,87 @@ public class GUI {
     }
     
     private void southButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
+    	boolean moved = false;
+		
+		try {				
+			moved = observer.handleMovement(inputType.SOUTH);
+		} catch (RequiredToFightException e) {				
+			appendToLog("You have encountered a villain:");
+			appendToLog(e.getVillain().toString());
+			appendToLog("You can either fight or run.");
+			return;
+		} catch (IndexOutOfBoundsException e) {
+			appendToLog("You have entered the void and are suddenly placed on a new map");
+			notifyNewMap();
+			return;
+		} catch (Exception e) {
+			//TODO: might adjust
+			appendToLog("Something went wrong managing input");
+			return;
+		}
+		
+		if (moved == true) {
+			appendToLog("You have moved SOUTH");
+		} else {
+			//Show pop up dialog that invalid input
+			JOptionPane.showMessageDialog(gameFrame, "You cannot perform this action now", "Invalid move", JOptionPane.ERROR_MESSAGE);
+		}
     }                                           
 
     private void eastButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        // TODO add your handling code here:
+    	boolean moved = false;
+		
+		try {				
+			moved = observer.handleMovement(inputType.EAST);
+		} catch (RequiredToFightException e) {				
+			appendToLog("You have encountered a villain:");
+			appendToLog(e.getVillain().toString());
+			appendToLog("You can either fight or run.");
+			return;
+		} catch (IndexOutOfBoundsException e) {
+			appendToLog("You have entered the void and are suddenly placed on a new map");
+			notifyNewMap();
+			return;
+		} catch (Exception e) {
+			//TODO: might adjust
+			appendToLog("Something went wrong managing input");
+			return;
+		}
+		
+		if (moved == true) {
+			appendToLog("You have moved EAST");
+		} else {
+			//Show pop up dialog that invalid input
+			JOptionPane.showMessageDialog(gameFrame, "You cannot perform this action now", "Invalid move", JOptionPane.ERROR_MESSAGE);
+		}
     }                                          
 
     private void westButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        // TODO add your handling code here:
+    	boolean moved = false;
+		
+		try {				
+			moved = observer.handleMovement(inputType.WEST);
+		} catch (RequiredToFightException e) {				
+			appendToLog("You have encountered a villain:");
+			appendToLog(e.getVillain().toString());
+			appendToLog("You can either fight or run.");
+			return;
+		} catch (IndexOutOfBoundsException e) {
+			appendToLog("You have entered the void and are suddenly placed on a new map");
+			notifyNewMap();
+			return;
+		} catch (Exception e) {
+			//TODO: might adjust
+			appendToLog("Something went wrong managing input");
+			return;
+		}
+		
+		if (moved == true) {
+			appendToLog("You have moved WEST");
+		} else {
+			//Show pop up dialog that invalid input
+			JOptionPane.showMessageDialog(gameFrame, "You cannot perform this action now", "Invalid move", JOptionPane.ERROR_MESSAGE);
+		}
     }                                          
 
     private void fightButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               	
@@ -591,11 +663,37 @@ public class GUI {
 			// handle game over
 			System.out.println("END OF GAME");
 			System.exit(1);
+		} catch (RequiredToFightException e) {
+			// Should never trigger here
+			System.out.println("Unkown error occured. Retry your action.");
 		}
     }                                           
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        // TODO add your handling code here:
+    	try {
+			boolean valid = observer.handleFight(inputType.RUN);
+			
+			if (!valid) {
+				JOptionPane.showMessageDialog(gameFrame, "You cannot perform this action now", "Invalid move", JOptionPane.ERROR_MESSAGE);				
+				return;
+			}
+			
+			appendToLog("You managed to escape");
+			
+		} catch (RequiredToFightException e) {
+			appendToLog("You were too slow. You have to fight.");
+			fightButtonActionPerformed(evt);
+			return;
+		} catch (ArtifactDroppedException e) {
+			appendToLog("");
+			appendToLog("You managed to defeat the beast");
+			appendToLog("");
+			appendToLog("The artifact has been dropped. You can either take or leave it");
+		} catch (GameOverException e) {
+			// handle game over
+			System.out.println("END OF GAME");
+			System.exit(1);
+		}
     }                                         
 
     private void takeItemButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
@@ -611,7 +709,14 @@ public class GUI {
     }                                              
 
     private void leaveItemButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
+    	boolean valid = observer.handleLeaveItem(inputType.LEAVE_ITEM);
+    	
+    	if (!valid) {
+    		JOptionPane.showMessageDialog(gameFrame, "You cannot perform this action now", "Invalid move", JOptionPane.ERROR_MESSAGE);
+    		return;
+    	}
+    	
+    	appendToLog("You left the item. You can now move.");
     }
 }
 	/*
