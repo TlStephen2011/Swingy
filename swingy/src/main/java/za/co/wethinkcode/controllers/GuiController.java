@@ -151,6 +151,7 @@ public class GuiController {
 				
 				if (dropped != null) {
 					allowArtifactInteraction();
+					gameBoard.dropPosition(activeVillain.getPosition());					
 					throw new ArtifactDroppedException(dropped);
 				}
 				
@@ -213,6 +214,13 @@ public class GuiController {
 		
 		allowAllMovement();		
 		
+		try {
+			handleMovement(bufferedMove);
+		} catch (Exception e) {
+			System.out.println("Wtf??");
+			System.exit(1);
+		}
+		
 		return true;
 	}
 
@@ -225,6 +233,14 @@ public class GuiController {
 		}
 		
 		allowAllMovement();
+		
+		try {
+			handleMovement(bufferedMove);
+		} catch (Exception e) {
+			System.out.println("Wtf??");
+			System.exit(1);
+		}
+		
 		return true;
 	}
 	
