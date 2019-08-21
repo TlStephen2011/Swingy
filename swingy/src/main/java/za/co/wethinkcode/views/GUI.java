@@ -122,9 +122,10 @@ public class GUI {
 				String name = JOptionPane.showInputDialog("Enter hero name: ");
 				String heroClass = JOptionPane.showInputDialog("Enter hero class: ");
 				if (name != null && heroClass != null && name.length() != 0 && heroClass.length() != 0) {
-					for(int i = 0; i < observers.size(); i++) {
-						observers.get(i).newHero(new Hero(name, heroClass));
-					}
+					observer.newHero(new Hero(name, heroClass));
+					mainFrame.setVisible(false);
+					loadMainGameComponents();
+			    	gameFrame.setVisible(true);
 				}
 				else {
 					JOptionPane.showMessageDialog(mainFrame, "Inputs cannot be empty", "Invalid Input", JOptionPane.ERROR_MESSAGE);
@@ -661,8 +662,8 @@ public class GUI {
 			appendToLog("The artifact has been dropped. You can either take or leave it");
 		} catch (GameOverException e) {
 			// handle game over
-			System.out.println("END OF GAME");
-			System.exit(1);
+			JOptionPane.showMessageDialog(mainFrame, "You died an honarable death, unfortunately your feats will not be remembered.", "Game Over", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		} catch (RequiredToFightException e) {
 			// Should never trigger here
 			System.out.println("Unkown error occured. Retry your action.");
@@ -691,8 +692,8 @@ public class GUI {
 			appendToLog("The artifact has been dropped. You can either take or leave it");
 		} catch (GameOverException e) {
 			// handle game over
-			System.out.println("END OF GAME");
-			System.exit(1);
+			JOptionPane.showMessageDialog(mainFrame, "You died an honarable death, unfortunately your feats will not be remembered.", "Game Over", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
     }                                         
 
