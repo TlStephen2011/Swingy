@@ -3,6 +3,7 @@ package za.co.wethinkcode.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import za.co.wethinkcode.database.HeroStorage;
 import za.co.wethinkcode.exceptions.ArtifactDroppedException;
 import za.co.wethinkcode.exceptions.GameOverException;
 import za.co.wethinkcode.exceptions.OccupiedByVillainException;
@@ -242,6 +243,10 @@ public class GuiController {
 		}
 		
 		return true;
+	}
+
+	public void saveGame() {
+		HeroStorage.saveHero(myHero);		
 	}
 	
 }

@@ -2,6 +2,7 @@ package za.co.wethinkcode.controllers;
 
 import java.util.ArrayList;
 
+import za.co.wethinkcode.database.HeroStorage;
 import za.co.wethinkcode.exceptions.GameOverException;
 import za.co.wethinkcode.exceptions.OccupiedByVillainException;
 import za.co.wethinkcode.exceptions.RequiredToFightException;
@@ -49,6 +50,7 @@ public class ConsoleController {
 					a = handleEncounter(t, v, in);
 				} catch (GameOverException gameOver) {
 					this.view.showDeath(v, this.hero);
+					HeroStorage.saveHero(hero);
 					activeGame = false;
 				}
 

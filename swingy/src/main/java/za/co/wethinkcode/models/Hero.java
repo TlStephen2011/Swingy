@@ -164,7 +164,7 @@ public class Hero extends Character {
 	
 	public boolean attack(Villain v) {
 		//TODO better attack calculation
-		if (this.attackDamage > v.attackDamage) {
+		if (this.attackDamage >= v.attackDamage) {
 			return true;
 		}
 		return false;		
