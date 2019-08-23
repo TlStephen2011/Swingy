@@ -1,6 +1,7 @@
 package za.co.wethinkcode.controllers;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import za.co.wethinkcode.database.HeroStorage;
 import za.co.wethinkcode.exceptions.GameOverException;
@@ -18,13 +19,14 @@ import za.co.wethinkcode.utilities.VillainBuilder;
 import za.co.wethinkcode.views.Console;
 import za.co.wethinkcode.views.Viewable;
 import za.co.wethinkcode.views.Viewable.inputType;
+import javax.validation.*;
 
 public class ConsoleController {
 	private Hero hero;
 	private ArrayList<Villain> villains;
 	private GameBoard gameBoard;
-	private Viewable view;
-		
+	private Viewable view;	
+	
 	public ConsoleController() {
 		this.view = new Console(); 
 		this.hero = this.view.newHero();
@@ -33,6 +35,7 @@ public class ConsoleController {
 	}
 	
 	public boolean run() {
+	
 		boolean activeGame = true;
 		
 		while (activeGame) {
@@ -126,7 +129,8 @@ public class ConsoleController {
 		Coordinates newCoordinates = null;
 
 		if (input == inputType.QUIT) {
-			//TODO: save state to FILE and exit gracefully
+			HeroStorage.saveHero(hero);
+			System.out.println("Your game has been saved");
 			this.view.showGameQuit();
 			System.exit(0);
 		}

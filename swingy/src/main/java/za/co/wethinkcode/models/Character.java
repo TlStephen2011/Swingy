@@ -1,8 +1,10 @@
 package za.co.wethinkcode.models;
 
 import za.co.wethinkcode.utilities.Coordinates;
+import javax.validation.constraints.*;
 
 public abstract class Character {
+	@NotNull
 	protected String name;
 	protected int level;
 	protected int attackDamage;

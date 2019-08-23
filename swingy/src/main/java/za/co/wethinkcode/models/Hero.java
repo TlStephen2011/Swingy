@@ -3,9 +3,11 @@ package za.co.wethinkcode.models;
 import java.util.Random;
 
 import za.co.wethinkcode.utilities.Coordinates;
+import javax.validation.constraints.*;
 
 public class Hero extends Character {
 	private int Id;
+	@NotNull
 	private String heroClass;
 	private int experience;
 	private Weapon weapon;

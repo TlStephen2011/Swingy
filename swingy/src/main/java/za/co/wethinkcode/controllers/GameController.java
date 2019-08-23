@@ -5,8 +5,8 @@ public class GameController {
 	private ConsoleController console;
 	private GuiController gui;
 	
-	
 	public GameController(String view) {
+		
 		if (view.contentEquals("gui")) {
 			gui = new GuiController();
 		} else if (view.contentEquals("console")) {

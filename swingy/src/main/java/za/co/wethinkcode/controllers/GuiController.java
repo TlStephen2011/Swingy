@@ -2,6 +2,7 @@ package za.co.wethinkcode.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import za.co.wethinkcode.database.HeroStorage;
 import za.co.wethinkcode.exceptions.ArtifactDroppedException;
